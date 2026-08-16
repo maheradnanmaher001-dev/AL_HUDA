@@ -1,0 +1,65 @@
+{
+  "provider": "fawazahmed0/hadith-api",
+  "version": "1",
+  "books": [
+    {
+      "id": "bukhari",
+      "name": "Sahih al-Bukhari",
+      "arabic": "صحيح البخاري",
+      "urdu": "صحیح بخاری"
+    },
+    {
+      "id": "muslim",
+      "name": "Sahih Muslim",
+      "arabic": "صحيح مسلم",
+      "urdu": "صحیح مسلم"
+    },
+    {
+      "id": "abudawud",
+      "name": "Sunan Abu Dawud",
+      "arabic": "سنن أبي داود",
+      "urdu": "سنن ابی داؤد"
+    },
+    {
+      "id": "tirmidhi",
+      "name": "Jami' at-Tirmidhi",
+      "arabic": "جامع الترمذي",
+      "urdu": "جامع ترمذی"
+    },
+    {
+      "id": "nasai",
+      "name": "Sunan an-Nasa'i",
+      "arabic": "سنن النسائي",
+      "urdu": "سنن نسائی"
+    },
+    {
+      "id": "ibnmajah",
+      "name": "Sunan Ibn Majah",
+      "arabic": "سنن ابن ماجه",
+      "urdu": "سنن ابن ماجہ"
+    },
+    {
+      "id": "malik",
+      "name": "Muwatta Malik",
+      "arabic": "موطأ مالك",
+      "urdu": "موطا امام مالک"
+    },
+    {
+      "id": "ahmad",
+      "name": "Musnad Ahmad",
+      "arabic": "مسند أحمد",
+      "urdu": "مسند احمد"
+    },
+    {
+      "id": "nawawi",
+      "name": "40 Hadith Nawawi",
+      "arabic": "الأربعون النووية",
+      "urdu": "اربعین نووی"
+    }
+  ],
+  "languages": [
+    "Arabic",
+    "Urdu",
+    "English"
+  ]
+}

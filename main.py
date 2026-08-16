@@ -7,6 +7,7 @@ from kivy.uix.screenmanager import ScreenManager,Screen,FadeTransition
 from kivy.properties import StringProperty
 from app.services.navigation import NavigationService
 from app.screens.quran import QuranScreen
+from app.screens.hadith import HadithScreen
 
 KV = '''
 #:import dp kivy.metrics.dp
@@ -77,6 +78,55 @@ KV = '''
                     text: "⚙️  Settings"
                     on_release: app.go("settings")
 
+<HadithScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(10)
+        spacing: dp(8)
+        BoxLayout:
+            size_hint_y: None
+            height: dp(48)
+            spacing: dp(6)
+            Btn:
+                text: "←"
+                size_hint_x: None
+                width: dp(48)
+                on_release: app.go("home")
+            Label:
+                text: "HADITH"
+                color: .98,.86,.55,1
+                font_size: "22sp"
+                bold: True
+        TextInput:
+            id: search
+            hint_text: "Search Hadith / حدیث تلاش کریں"
+            size_hint_y: None
+            height: dp(44)
+            multiline: False
+            on_text_validate: root.search()
+        BoxLayout:
+            size_hint_y: None
+            height: dp(44)
+            Btn:
+                text: "Books"
+                on_release: root.show_books()
+            Btn:
+                text: "Search"
+                on_release: root.search()
+        Label:
+            text: root.status
+            size_hint_y: None
+            height: dp(28)
+            color: .62,.70,.66,1
+        ScrollView:
+            do_scroll_x: False
+            GridLayout:
+                id: content
+                cols: 1
+                spacing: dp(7)
+                size_hint_y: None
+                height: self.minimum_height
+
 <QuranScreen>:
     BoxLayout:
         orientation: "vertical"
@@ -143,6 +193,7 @@ class ALHudaApp(App):
         sm=ScreenManager(transition=FadeTransition(duration=.22))
         sm.add_widget(Home(name="home"))
         sm.add_widget(QuranScreen(name="quran"))
+        sm.add_widget(HadithScreen(name="hadith"))
         pages={
             "hadith":("Hadith","Book-wise collections • metadata foundation"),
             "prayer":("Prayer Times","Calculation, countdown and notification foundation"),

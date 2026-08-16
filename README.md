@@ -26,3 +26,8 @@ Next Quran work:
 Sources:
 - Tanzil Project
 - Al Quran Cloud API
+
+
+## Step 3 — Hadith
+
+Book-wise Hadith foundation with Arabic, Urdu and English editions, search, Hadith number, reference and grade fields when supplied by the source. Initial catalog includes Bukhari, Muslim, Abu Dawud, Tirmidhi, Nasa'i, Ibn Majah, Muwatta Malik, Musnad Ahmad and Nawawi 40. Data is fetched/cached through the open hadith-api dataset; upstream edition availability and licensing/attribution will be verified before production release.
