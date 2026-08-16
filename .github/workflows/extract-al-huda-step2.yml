@@ -1,0 +1,39 @@
+name: Install AL-HUDA Step 2
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract Step 2 update
+        shell: bash
+        run: |
+          set -e
+          ZIP=$(find . -maxdepth 1 -type f -iname 'AL-HUDA_step2_quran_update.zip' | head -n 1)
+          test -n "$ZIP"
+          rm -rf .alhuda_step2
+          mkdir .alhuda_step2
+          unzip -oq "$ZIP" -d .alhuda_step2
+          cp -R .alhuda_step2/. .
+          rm -rf .alhuda_step2
+          rm -f "$ZIP"
+
+      - name: Commit Step 2
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Nothing to commit."
+          else
+            git commit -m "Add AL-HUDA Step 2 Quran module"
+            git push
+          fi
