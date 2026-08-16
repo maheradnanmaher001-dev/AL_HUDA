@@ -9,46 +9,43 @@ permissions:
 jobs:
   extract:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Find and extract AL-HUDA ZIP
+      - name: Extract project
         shell: bash
         run: |
           set -e
-
           ZIP=$(find . -maxdepth 1 -type f -iname 'AL-HUDA_step1_foundation.zip' | head -n 1)
-
           if [ -z "$ZIP" ]; then
             echo "AL-HUDA_step1_foundation.zip was not found."
             exit 1
           fi
 
-          mkdir -p .alhuda_extract
-          unzip -o "$ZIP" -d .alhuda_extract
-
-          # Move project files from the ZIP root to the repository root.
+          rm -rf .alhuda_extract
+          mkdir .alhuda_extract
+          unzip -oq "$ZIP" -d .alhuda_extract
           cp -R .alhuda_extract/. .
-
           rm -rf .alhuda_extract
           rm -f "$ZIP"
 
-          echo "AL-HUDA project extracted successfully."
-          echo "Repository root:"
-          ls -la
+          # Do not push the APK workflow yet; GitHub requires
+          # workflow-specific permission for automated workflow changes.
+          rm -f .github/workflows/build-apk.yml
 
-      - name: Commit extracted project
+          echo "AL-HUDA project extracted successfully."
+          find . -maxdepth 2 -type f | sort
+
+      - name: Commit project
         shell: bash
         run: |
+          set -e
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
           git add -A
-
           if git diff --cached --quiet; then
-            echo "No changes to commit."
+            echo "Nothing new to commit."
           else
             git commit -m "Extract AL-HUDA Step 1 project"
             git push
