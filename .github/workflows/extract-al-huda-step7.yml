@@ -1,0 +1,25 @@
+name: Install AL-HUDA Step 7 Calendar
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract Step 7
+        run: |
+          set -e
+          ZIP=$(find . -maxdepth 1 -type f -iname 'AL-HUDA_step7_calendar_update.zip' | head -n1)
+          test -n "$ZIP"
+          mkdir .step7
+          unzip -oq "$ZIP" -d .step7
+          cp -R .step7/. .
+          rm -rf .step7 "$ZIP"
+      - name: Commit Step 7
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || (git commit -m "Add AL-HUDA Step 7 Islamic calendar" && git push)
