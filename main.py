@@ -9,6 +9,7 @@ from app.services.navigation import NavigationService
 from app.screens.quran import QuranScreen
 from app.screens.hadith import HadithScreen
 from app.screens.prayer import PrayerScreen
+from app.screens.qibla import QiblaScreen
 
 KV = '''
 #:import dp kivy.metrics.dp
@@ -79,6 +80,63 @@ KV = '''
                     text: "⚙️  Settings"
                     on_release: app.go("settings")
 
+<QiblaScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(12)
+        spacing: dp(8)
+        BoxLayout:
+            size_hint_y: None
+            height: dp(48)
+            Btn:
+                text: "←"
+                size_hint_x: None
+                width: dp(48)
+                on_release: app.go("home")
+            Label:
+                text: "LIVE QIBLA"
+                color: .98,.86,.55,1
+                font_size: "21sp"
+                bold: True
+        Label:
+            text: root.status
+            size_hint_y: None
+            height: dp(35)
+            color: .98,.86,.55,1
+        Label:
+            id: needle
+            text: "▲"
+            font_size: "80sp"
+            color: .98,.86,.55,1
+        Label:
+            text: "Turn your phone until the indicator points toward Qibla."
+            color: .70,.76,.72,1
+            text_size: self.width,None
+        Label:
+            text: root.sensor_status
+            color: .62,.70,.66,1
+        BoxLayout:
+            size_hint_y: None
+            height: dp(45)
+            spacing: dp(6)
+            TextInput:
+                id: latitude
+                text: "31.5204"
+                hint_text: "Latitude"
+                multiline: False
+            TextInput:
+                id: longitude
+                text: "74.3587"
+                hint_text: "Longitude"
+                multiline: False
+            Btn:
+                text: "Set"
+                size_hint_x: None
+                width: dp(62)
+                on_release: root.calculate()
+        Label:
+            text: "Bearing: %.1f°   Heading: %.1f°   Turn: %.1f°" % (root.bearing,root.heading,root.relative)
+            color: .80,.84,.81,1
 <PrayerScreen>:
     BoxLayout:
         orientation: "vertical"
@@ -266,6 +324,7 @@ class ALHudaApp(App):
         sm.add_widget(QuranScreen(name="quran"))
         sm.add_widget(HadithScreen(name="hadith"))
         sm.add_widget(PrayerScreen(name="prayer"))
+        sm.add_widget(QiblaScreen(name="qibla"))
         pages={
             "hadith":("Hadith","Book-wise collections • metadata foundation"),
             "prayer":("Prayer Times","Calculation, countdown and notification foundation"),

@@ -41,3 +41,12 @@ Book-wise Hadith foundation with Arabic, Urdu and English editions, search, Hadi
 - Integrated Prayer Times screen
 
 Uses AlAdhan's timingsByCity endpoint. GPS, calculation-method selection, Azan/background notifications and stop controls will be implemented in the next prayer sub-step.
+
+
+## Step 5 — Live Qibla Compass
+- Accurate great-circle bearing to the Kaaba
+- Latitude/longitude input
+- 8-direction label
+- Android rotation-vector sensor bridge
+- Live heading and relative Qibla turn
+- Islamic-themed Qibla screen
