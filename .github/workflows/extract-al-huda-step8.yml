@@ -1,0 +1,25 @@
+name: Install AL-HUDA Step 8 Duas Azkar
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract Step 8
+        run: |
+          set -e
+          ZIP=$(find . -maxdepth 1 -type f -iname 'AL-HUDA_step8_duas_azkar.zip' | head -n1)
+          test -n "$ZIP"
+          mkdir .step8
+          unzip -oq "$ZIP" -d .step8
+          cp -R .step8/. .
+          rm -rf .step8 "$ZIP"
+      - name: Commit Step 8
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || (git commit -m "Add AL-HUDA Step 8 Duas Azkar and roadmap" && git push)
