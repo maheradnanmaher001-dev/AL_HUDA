@@ -10,6 +10,7 @@ from app.screens.quran import QuranScreen
 from app.screens.hadith import HadithScreen
 from app.screens.prayer import PrayerScreen
 from app.screens.qibla import QiblaScreen
+from app.screens.azan import AzanScreen
 
 KV = '''
 #:import dp kivy.metrics.dp
@@ -80,6 +81,36 @@ KV = '''
                     text: "⚙️  Settings"
                     on_release: app.go("settings")
 
+<AzanScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(16)
+        spacing: dp(12)
+        Label:
+            text: "AZAN & NOTIFICATIONS"
+            color: .98,.86,.55,1
+            font_size: "21sp"
+            bold: True
+            size_hint_y: None
+            height: dp(48)
+        Label:
+            text: root.status
+            color: .78,.82,.79,1
+            text_size: self.width,None
+        Btn:
+            text: "Disable Notifications" if root.enabled else "Enable Notifications"
+            size_hint_y: None
+            height: dp(50)
+            on_release: root.toggle()
+        Btn:
+            text: "STOP ACTIVE AZAN"
+            size_hint_y: None
+            height: dp(50)
+            on_release: root.stop_azan()
+        Label:
+            text: "Step 6 adds the notification/control foundation. Final background audio receiver is part of the Android packaging pass."
+            color: .55,.62,.58,1
+            text_size: self.width,None
 <QiblaScreen>:
     BoxLayout:
         orientation: "vertical"
@@ -325,6 +356,7 @@ class ALHudaApp(App):
         sm.add_widget(HadithScreen(name="hadith"))
         sm.add_widget(PrayerScreen(name="prayer"))
         sm.add_widget(QiblaScreen(name="qibla"))
+        sm.add_widget(AzanScreen(name="azan"))
         pages={
             "hadith":("Hadith","Book-wise collections • metadata foundation"),
             "prayer":("Prayer Times","Calculation, countdown and notification foundation"),

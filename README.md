@@ -50,3 +50,16 @@ Uses AlAdhan's timingsByCity endpoint. GPS, calculation-method selection, Azan/b
 - Android rotation-vector sensor bridge
 - Live heading and relative Qibla turn
 - Islamic-themed Qibla screen
+
+
+## Step 6 — Azan & Notifications Foundation
+
+Added:
+- Azan/notification settings screen
+- Enable/disable notification control
+- Stop-active-Azan control hook
+- Next-prayer scheduling foundation
+- Android AlarmManager integration hook
+- Safe non-Android fallback
+
+The complete production background-audio receiver, Android notification channel, boot rescheduling and audio stop action require final Android packaging/manifest integration.
