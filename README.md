@@ -31,3 +31,13 @@ Sources:
 ## Step 3 — Hadith
 
 Book-wise Hadith foundation with Arabic, Urdu and English editions, search, Hadith number, reference and grade fields when supplied by the source. Initial catalog includes Bukhari, Muslim, Abu Dawud, Tirmidhi, Nasa'i, Ibn Majah, Muwatta Malik, Musnad Ahmad and Nawawi 40. Data is fetched/cached through the open hadith-api dataset; upstream edition availability and licensing/attribution will be verified before production release.
+
+
+## Step 4 — Prayer Times
+- Fajr, Sunrise, Dhuhr, Asr, Maghrib and Isha
+- City/country lookup
+- Local JSON cache
+- Live next-prayer countdown
+- Integrated Prayer Times screen
+
+Uses AlAdhan's timingsByCity endpoint. GPS, calculation-method selection, Azan/background notifications and stop controls will be implemented in the next prayer sub-step.

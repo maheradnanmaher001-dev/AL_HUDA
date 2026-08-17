@@ -8,6 +8,7 @@ from kivy.properties import StringProperty
 from app.services.navigation import NavigationService
 from app.screens.quran import QuranScreen
 from app.screens.hadith import HadithScreen
+from app.screens.prayer import PrayerScreen
 
 KV = '''
 #:import dp kivy.metrics.dp
@@ -78,6 +79,76 @@ KV = '''
                     text: "⚙️  Settings"
                     on_release: app.go("settings")
 
+<PrayerScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(12)
+        spacing: dp(8)
+        BoxLayout:
+            size_hint_y: None
+            height: dp(48)
+            spacing: dp(6)
+            Btn:
+                text: "←"
+                size_hint_x: None
+                width: dp(48)
+                on_release: app.go("home")
+            Label:
+                text: "PRAYER TIMES"
+                color: .98,.86,.55,1
+                font_size: "21sp"
+                bold: True
+        BoxLayout:
+            size_hint_y: None
+            height: dp(44)
+            spacing: dp(6)
+            TextInput:
+                id: city
+                hint_text: "City"
+                multiline: False
+            TextInput:
+                id: country
+                hint_text: "Country"
+                multiline: False
+            Btn:
+                text: "Load"
+                size_hint_x: None
+                width: dp(72)
+                on_release: root.load()
+        Label:
+            text: root.status
+            size_hint_y: None
+            height: dp(28)
+            color: .62,.70,.66,1
+        Label:
+            text: root.next_prayer
+            size_hint_y: None
+            height: dp(34)
+            color: .98,.86,.55,1
+            font_size: "18sp"
+        Label:
+            text: root.countdown
+            size_hint_y: None
+            height: dp(54)
+            color: .98,.95,.90,1
+            font_size: "28sp"
+            bold: True
+        GridLayout:
+            cols: 2
+            spacing: dp(6)
+            row_default_height: dp(55)
+            Label: text: "Fajr"; color: .98,.95,.90,1
+            Label: id: fajr; text: "--"; color: .98,.86,.55,1
+            Label: text: "Sunrise"; color: .98,.95,.90,1
+            Label: id: sunrise; text: "--"; color: .98,.86,.55,1
+            Label: text: "Dhuhr"; color: .98,.95,.90,1
+            Label: id: dhuhr; text: "--"; color: .98,.86,.55,1
+            Label: text: "Asr"; color: .98,.95,.90,1
+            Label: id: asr; text: "--"; color: .98,.86,.55,1
+            Label: text: "Maghrib"; color: .98,.95,.90,1
+            Label: id: maghrib; text: "--"; color: .98,.86,.55,1
+            Label: text: "Isha"; color: .98,.95,.90,1
+            Label: id: isha; text: "--"; color: .98,.86,.55,1
 <HadithScreen>:
     BoxLayout:
         orientation: "vertical"
@@ -194,6 +265,7 @@ class ALHudaApp(App):
         sm.add_widget(Home(name="home"))
         sm.add_widget(QuranScreen(name="quran"))
         sm.add_widget(HadithScreen(name="hadith"))
+        sm.add_widget(PrayerScreen(name="prayer"))
         pages={
             "hadith":("Hadith","Book-wise collections • metadata foundation"),
             "prayer":("Prayer Times","Calculation, countdown and notification foundation"),
