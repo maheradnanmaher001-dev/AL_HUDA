@@ -11,6 +11,7 @@ from app.screens.hadith import HadithScreen
 from app.screens.prayer import PrayerScreen
 from app.screens.qibla import QiblaScreen
 from app.screens.azan import AzanScreen
+from app.screens.calendar import CalendarScreen
 
 KV = '''
 #:import dp kivy.metrics.dp
@@ -81,6 +82,67 @@ KV = '''
                     text: "⚙️  Settings"
                     on_release: app.go("settings")
 
+<CalendarScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(12)
+        spacing: dp(8)
+        BoxLayout:
+            size_hint_y: None
+            height: dp(48)
+            spacing: dp(6)
+            Btn:
+                text: "←"
+                size_hint_x: None
+                width: dp(48)
+                on_release: app.go("home")
+            Label:
+                text: "ISLAMIC CALENDAR"
+                color: .98,.86,.55,1
+                font_size: "20sp"
+                bold: True
+        Label:
+            text: root.hijri
+            color: .98,.86,.55,1
+            size_hint_y: None
+            height: dp(32)
+        BoxLayout:
+            size_hint_y: None
+            height: dp(46)
+            Btn:
+                text: "‹"
+                on_release: root.previous()
+            Label:
+                text: root.title
+                color: .98,.95,.90,1
+                bold: True
+            Btn:
+                text: "›"
+                on_release: root.next()
+        GridLayout:
+            cols: 7
+            size_hint_y: None
+            height: dp(32)
+            Label: text: "Sun"
+            Label: text: "Mon"
+            Label: text: "Tue"
+            Label: text: "Wed"
+            Label: text: "Thu"
+            Label: text: "Fri"
+            Label: text: "Sat"
+        Label:
+            id: days
+            text: ""
+            color: .90,.93,.90,1
+            font_size: "16sp"
+            halign: "center"
+            valign: "top"
+            text_size: self.size
+        Btn:
+            text: "TODAY"
+            size_hint_y: None
+            height: dp(46)
+            on_release: root.today()
 <AzanScreen>:
     BoxLayout:
         orientation: "vertical"
@@ -357,6 +419,7 @@ class ALHudaApp(App):
         sm.add_widget(PrayerScreen(name="prayer"))
         sm.add_widget(QiblaScreen(name="qibla"))
         sm.add_widget(AzanScreen(name="azan"))
+        sm.add_widget(CalendarScreen(name="calendar"))
         pages={
             "hadith":("Hadith","Book-wise collections • metadata foundation"),
             "prayer":("Prayer Times","Calculation, countdown and notification foundation"),

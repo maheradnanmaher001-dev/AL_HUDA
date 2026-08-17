@@ -63,3 +63,17 @@ Added:
 - Safe non-Android fallback
 
 The complete production background-audio receiver, Android notification channel, boot rescheduling and audio stop action require final Android packaging/manifest integration.
+
+
+## Step 7 — Islamic + Gregorian Calendar
+
+Added:
+- Islamic/Hijri date label
+- Gregorian month calendar
+- January and every Gregorian month through the same calendar
+- Previous/next month navigation
+- Today button
+- 42-cell month grid foundation
+- AL-HUDA calendar screen
+
+Note: the arithmetic Hijri conversion is a foundation. For publication-grade dates and moon-sighting-sensitive observances, a selectable official/local calendar source should be used.
