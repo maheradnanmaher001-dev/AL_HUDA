@@ -77,3 +77,7 @@ Added:
 - AL-HUDA calendar screen
 
 Note: the arithmetic Hijri conversion is a foundation. For publication-grade dates and moon-sighting-sensitive observances, a selectable official/local calendar source should be used.
+
+
+## Step 8 — Duas & Azkar
+Added a Dua/Azkar screen with Arabic, Urdu, English, references, categories foundation and search. `PROJECT_ROADMAP.md` and `CHANGELOG.md` are now included to preserve project continuity between chats.

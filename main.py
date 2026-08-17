@@ -12,6 +12,7 @@ from app.screens.prayer import PrayerScreen
 from app.screens.qibla import QiblaScreen
 from app.screens.azan import AzanScreen
 from app.screens.calendar import CalendarScreen
+from app.screens.dua import DuaScreen
 
 KV = '''
 #:import dp kivy.metrics.dp
@@ -82,6 +83,54 @@ KV = '''
                     text: "⚙️  Settings"
                     on_release: app.go("settings")
 
+<DuaScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(12)
+        spacing: dp(8)
+        BoxLayout:
+            size_hint_y: None
+            height: dp(48)
+            Btn:
+                text: "←"
+                size_hint_x: None
+                width: dp(48)
+                on_release: app.go("home")
+            Label:
+                text: "DUAS & AZKAR"
+                color: .98,.86,.55,1
+                font_size: "20sp"
+                bold: True
+        BoxLayout:
+            size_hint_y: None
+            height: dp(44)
+            spacing: dp(6)
+            TextInput:
+                id: search
+                hint_text: "Search Dua / Azkar"
+                multiline: False
+                on_text_validate: root.refresh()
+            Btn:
+                text: "Search"
+                size_hint_x: None
+                width: dp(75)
+                on_release: root.refresh()
+        Label:
+            text: str(root.count) + " duas"
+            size_hint_y: None
+            height: dp(28)
+            color: .62,.70,.66,1
+        ScrollView:
+            Label:
+                id: results
+                text: ""
+                color: .92,.94,.92,1
+                font_size: "16sp"
+                text_size: self.width, None
+                halign: "right"
+                valign: "top"
+                size_hint_y: None
+                height: self.texture_size[1] + dp(20)
 <CalendarScreen>:
     BoxLayout:
         orientation: "vertical"
@@ -420,6 +469,7 @@ class ALHudaApp(App):
         sm.add_widget(QiblaScreen(name="qibla"))
         sm.add_widget(AzanScreen(name="azan"))
         sm.add_widget(CalendarScreen(name="calendar"))
+        sm.add_widget(DuaScreen(name="dua"))
         pages={
             "hadith":("Hadith","Book-wise collections • metadata foundation"),
             "prayer":("Prayer Times","Calculation, countdown and notification foundation"),
