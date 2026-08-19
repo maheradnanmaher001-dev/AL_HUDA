@@ -1,0 +1,13 @@
+AL-HUDA Step 14 — Settings Update
+
+NEW:
+app/services/settings_service.py
+docs/STEP14_SETTINGS_INTEGRATION.md
+
+SAFE UPDATE:
+This package intentionally does NOT contain main.py or replace any existing
+screen. It is a patch for the existing AL-HUDA repository.
+
+Next integration:
+Connect the existing Settings screen to settings_service.py, then test the
+whole app before moving to Step 15.
