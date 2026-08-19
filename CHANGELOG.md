@@ -14,3 +14,10 @@
 - Added search result rendering
 - Added section filters
 - Updated project roadmap
+
+## Step 11
+- Added persistent bookmarks storage
+- Added history storage with a 100-item limit
+- Added bookmarks/history screen
+- Added clear history control
+- Updated project roadmap

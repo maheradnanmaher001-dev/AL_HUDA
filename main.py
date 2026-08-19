@@ -15,6 +15,7 @@ from app.screens.calendar import CalendarScreen
 from app.screens.dua import DuaScreen
 from app.screens.tasbeeh import TasbeehScreen
 from app.screens.search import SearchScreen
+from app.screens.bookmarks import BookmarkScreen
 
 KV = '''
 #:import dp kivy.metrics.dp
@@ -85,6 +86,48 @@ KV = '''
                     text: "⚙️  Settings"
                     on_release: app.go("settings")
 
+<BookmarkScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(12)
+        spacing: dp(8)
+        BoxLayout:
+            size_hint_y: None
+            height: dp(48)
+            spacing: dp(6)
+            Btn:
+                text: "←"
+                size_hint_x: None
+                width: dp(48)
+                on_release: app.go("home")
+            Label:
+                text: "BOOKMARKS & HISTORY"
+                color: .98,.86,.55,1
+                font_size: "18sp"
+                bold: True
+        BoxLayout:
+            size_hint_y: None
+            height: dp(44)
+            spacing: dp(6)
+            Btn:
+                text: "Bookmarks"
+                on_release: root.set_mode("Bookmarks")
+            Btn:
+                text: "History"
+                on_release: root.set_mode("History")
+            Btn:
+                text: "Clear History"
+                on_release: root.clear_history_items()
+        ScrollView:
+            Label:
+                id: result_label
+                text: "No saved items yet."
+                color: .92,.94,.92,1
+                font_size: "15sp"
+                text_size: self.width, None
+                valign: "top"
+                size_hint_y: None
+                height: max(self.texture_size[1], dp(300))
 <SearchScreen>:
     BoxLayout:
         orientation: "vertical"
@@ -575,6 +618,7 @@ class ALHudaApp(App):
         sm.add_widget(DuaScreen(name="dua"))
         sm.add_widget(TasbeehScreen(name="tasbeeh"))
         sm.add_widget(SearchScreen(name="search"))
+        sm.add_widget(BookmarkScreen(name="bookmarks"))
         pages={
             "hadith":("Hadith","Book-wise collections • metadata foundation"),
             "prayer":("Prayer Times","Calculation, countdown and notification foundation"),

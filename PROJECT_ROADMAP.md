@@ -1,7 +1,7 @@
 # AL-HUDA Project Roadmap
 
-Current completed step: 10
-Next step: 11 — Bookmarks + History
+Current completed step: 11
+Next step: 12 — Login/Register
 
 ## Completed
 1. Foundation + structure
@@ -14,9 +14,9 @@ Next step: 11 — Bookmarks + History
 8. Duas & Azkar
 9. Tasbeeh Counter
 10. Universal Search
+11. Bookmarks + History
 
 ## Next
-11. Bookmarks + History
 12. Login/Register
 13. Email verification + password reset
 14. Settings
