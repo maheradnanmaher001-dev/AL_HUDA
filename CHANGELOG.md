@@ -8,3 +8,9 @@
 - Added Dua screen
 - Added project roadmap for continuity
 \n## Step 9\n- Added persistent Tasbeeh counter, 33/99 targets, Dhikr presets, progress, reset, vibration toggle and tap animation.\n
+## Step 10
+- Added universal search service
+- Added Quran/Hadith/Dua sections
+- Added search result rendering
+- Added section filters
+- Updated project roadmap

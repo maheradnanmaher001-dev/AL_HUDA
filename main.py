@@ -14,6 +14,7 @@ from app.screens.azan import AzanScreen
 from app.screens.calendar import CalendarScreen
 from app.screens.dua import DuaScreen
 from app.screens.tasbeeh import TasbeehScreen
+from app.screens.search import SearchScreen
 
 KV = '''
 #:import dp kivy.metrics.dp
@@ -84,6 +85,70 @@ KV = '''
                     text: "⚙️  Settings"
                     on_release: app.go("settings")
 
+<SearchScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(12)
+        spacing: dp(8)
+        BoxLayout:
+            size_hint_y: None
+            height: dp(48)
+            spacing: dp(6)
+            Btn:
+                text: "←"
+                size_hint_x: None
+                width: dp(48)
+                on_release: app.go("home")
+            Label:
+                text: "UNIVERSAL SEARCH"
+                color: .98,.86,.55,1
+                font_size: "19sp"
+                bold: True
+        BoxLayout:
+            size_hint_y: None
+            height: dp(46)
+            spacing: dp(6)
+            TextInput:
+                id: search_input
+                hint_text: "Search Quran, Hadith or Dua"
+                multiline: False
+                on_text_validate: root.run_search()
+            Btn:
+                text: "Search"
+                size_hint_x: None
+                width: dp(78)
+                on_release: root.run_search()
+            Btn:
+                text: "×"
+                size_hint_x: None
+                width: dp(46)
+                on_release: root.clear()
+        BoxLayout:
+            size_hint_y: None
+            height: dp(42)
+            spacing: dp(5)
+            Btn:
+                text: "All"
+                on_release: root.set_section("All")
+            Btn:
+                text: "Quran"
+                on_release: root.set_section("Quran")
+            Btn:
+                text: "Hadith"
+                on_release: root.set_section("Hadith")
+            Btn:
+                text: "Duas"
+                on_release: root.set_section("Duas")
+        ScrollView:
+            Label:
+                id: result_label
+                text: "Search Quran, Hadith or Duas"
+                color: .92,.94,.92,1
+                font_size: "15sp"
+                text_size: self.width, None
+                valign: "top"
+                size_hint_y: None
+                height: max(self.texture_size[1], dp(300))
 <TasbeehScreen>:
     BoxLayout:
         orientation:"vertical"; padding:dp(14); spacing:dp(10)
@@ -509,6 +574,7 @@ class ALHudaApp(App):
         sm.add_widget(CalendarScreen(name="calendar"))
         sm.add_widget(DuaScreen(name="dua"))
         sm.add_widget(TasbeehScreen(name="tasbeeh"))
+        sm.add_widget(SearchScreen(name="search"))
         pages={
             "hadith":("Hadith","Book-wise collections • metadata foundation"),
             "prayer":("Prayer Times","Calculation, countdown and notification foundation"),
