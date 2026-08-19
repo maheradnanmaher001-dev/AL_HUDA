@@ -1,0 +1,12 @@
+AL-HUDA Step 15 package
+========================
+Purpose: Complete UI/animation foundation.
+
+Files:
+- app/services/ui_animation_service.py
+- app/theme/motion.py
+- docs/STEP15_UI_ANIMATIONS.md
+
+Safety:
+- Additive only; no existing project files are overwritten by the extractor.
+- main.py and existing screens/services are preserved.
