@@ -28,3 +28,11 @@
 - Added password hashing (PBKDF2-SHA256)
 - Added logout
 - Added roadmap/security notes
+
+## Step 13
+- Added verification/reset code generation
+- Added expiring single-use code verification with attempt limit
+- Added no-reply email body/subject generation
+- Added SMTP delivery adapter using server environment variables
+- Added backend API contract
+- No email credentials embedded in the mobile project

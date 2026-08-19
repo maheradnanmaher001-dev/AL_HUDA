@@ -1,7 +1,7 @@
 # AL-HUDA Project Roadmap
 
-Current completed step: 12
-Next step: 13 — Email Verification + Password Reset
+Current completed step: 13
+Next step: 14 — Settings
 
 ## Completed
 1. Foundation + structure
@@ -16,9 +16,9 @@ Next step: 13 — Email Verification + Password Reset
 10. Universal Search
 11. Bookmarks + History
 12. Login/Register foundation
+13. Email verification + password reset foundation
 
 ## Next
-13. Email verification + password reset
 14. Settings
 15. UI + animations
 16. GPS + Android permissions
@@ -29,7 +29,7 @@ Next step: 13 — Email Verification + Password Reset
 21. Release preparation
 
 ## Security note
-Step 12 stores only a salted PBKDF2 password hash locally; plaintext passwords are not stored. This is a local account foundation. Production authentication/email verification belongs to Step 13 and must use a secure backend/provider.
+The mobile project contains no SMTP credentials. Verification/reset codes are stored only as salted hashes and expire after 10 minutes with a five-attempt limit. Actual email delivery requires a secure HTTPS backend with provider secrets stored server-side.
 
 ## Continuity rule
 Use this file and the existing repository code as the source of truth. Do not randomly replace working modules.
