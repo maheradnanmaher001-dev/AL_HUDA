@@ -1,0 +1,10 @@
+AL-HUDA Step 16 package
+========================
+Files:
+- app/services/app_health.py
+- docs/STEP16_PRODUCTION_CHECK.md
+- STEP16_MANIFEST.txt
+
+Purpose:
+- Add a lightweight project-structure health check.
+- Keep the update additive and safe.
