@@ -1,0 +1,82 @@
+name: Extract AL-HUDA Step 16
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  extract-step16:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Find and extract Step 16 ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          ZIP="$(find . -maxdepth 1 -type f -name 'AL-HUDA_step16_production_check.zip' -print -quit)"
+
+          if [ -z "$ZIP" ]; then
+            echo "Step 16 ZIP not found in repository root."
+            exit 1
+          fi
+
+          rm -rf .step16_extract
+          mkdir -p .step16_extract
+          unzip -oq "$ZIP" -d .step16_extract
+
+          mkdir -p app/services docs
+          cp .step16_extract/app/services/app_health.py app/services/app_health.py
+          cp .step16_extract/docs/STEP16_PRODUCTION_CHECK.md docs/STEP16_PRODUCTION_CHECK.md
+          cp .step16_extract/STEP16_MANIFEST.txt STEP16_MANIFEST.txt
+
+          rm -rf .step16_extract
+
+      - name: Verify Step 16
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          test -f main.py
+          test -f buildozer.spec
+          test -f requirements.txt
+          test -f app/services/app_health.py
+          test -f docs/STEP16_PRODUCTION_CHECK.md
+          test -f STEP16_MANIFEST.txt
+
+          python -m py_compile app/services/app_health.py
+
+          python - <<'PY'
+          from app.services.app_health import AppHealth
+          result = AppHealth.check_project(".")
+          if not result["ok"]:
+              raise SystemExit("Missing required project paths: " + ", ".join(result["missing"]))
+          print(AppHealth.summary("."))
+          PY
+
+          echo "Step 16 verification passed."
+
+      - name: Commit Step 16
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add app/services/app_health.py
+          git add docs/STEP16_PRODUCTION_CHECK.md
+          git add STEP16_MANIFEST.txt
+
+          if git diff --cached --quiet; then
+            echo "No Step 16 changes to commit."
+            exit 0
+          fi
+
+          git commit -m "Add AL-HUDA Step 16 production check"
+          git push
