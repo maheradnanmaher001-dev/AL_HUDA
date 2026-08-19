@@ -1,0 +1,72 @@
+name: Extract AL-HUDA Step 15
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  extract-step15:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Find and extract Step 15 ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          ZIP="$(find . -maxdepth 1 -type f -name 'AL-HUDA_step15_ui_animations.zip' -print -quit)"
+
+          if [ -z "$ZIP" ]; then
+            echo "Step 15 ZIP not found in repository root."
+            exit 1
+          fi
+
+          rm -rf .step15_extract
+          mkdir -p .step15_extract
+          unzip -oq "$ZIP" -d .step15_extract
+
+          # Additive update only: do not replace unrelated existing files.
+          mkdir -p app/services app/theme docs
+          cp .step15_extract/app/services/ui_animation_service.py app/services/ui_animation_service.py
+          cp .step15_extract/app/theme/motion.py app/theme/motion.py
+          cp .step15_extract/docs/STEP15_UI_ANIMATIONS.md docs/STEP15_UI_ANIMATIONS.md
+          cp .step15_extract/STEP15_MANIFEST.txt STEP15_MANIFEST.txt
+
+          rm -rf .step15_extract
+
+      - name: Verify Step 15
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f main.py
+          test -f app/services/ui_animation_service.py
+          test -f app/theme/motion.py
+          test -f docs/STEP15_UI_ANIMATIONS.md
+          test -f STEP15_MANIFEST.txt
+          python -m py_compile app/services/ui_animation_service.py app/theme/motion.py
+          echo "Step 15 verification passed."
+
+      - name: Commit Step 15
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add app/services/ui_animation_service.py
+          git add app/theme/motion.py
+          git add docs/STEP15_UI_ANIMATIONS.md
+          git add STEP15_MANIFEST.txt
+
+          if git diff --cached --quiet; then
+            echo "No Step 15 changes to commit."
+            exit 0
+          fi
+
+          git commit -m "Add AL-HUDA Step 15 UI animations"
+          git push
