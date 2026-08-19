@@ -1,7 +1,7 @@
 # AL-HUDA Project Roadmap
 
-Current completed step: 11
-Next step: 12 — Login/Register
+Current completed step: 12
+Next step: 13 — Email Verification + Password Reset
 
 ## Completed
 1. Foundation + structure
@@ -15,9 +15,9 @@ Next step: 12 — Login/Register
 9. Tasbeeh Counter
 10. Universal Search
 11. Bookmarks + History
+12. Login/Register foundation
 
 ## Next
-12. Login/Register
 13. Email verification + password reset
 14. Settings
 15. UI + animations
@@ -27,6 +27,9 @@ Next step: 12 — Login/Register
 19. Full integration testing
 20. Final APK build
 21. Release preparation
+
+## Security note
+Step 12 stores only a salted PBKDF2 password hash locally; plaintext passwords are not stored. This is a local account foundation. Production authentication/email verification belongs to Step 13 and must use a secure backend/provider.
 
 ## Continuity rule
 Use this file and the existing repository code as the source of truth. Do not randomly replace working modules.

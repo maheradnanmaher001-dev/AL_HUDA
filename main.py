@@ -16,6 +16,7 @@ from app.screens.dua import DuaScreen
 from app.screens.tasbeeh import TasbeehScreen
 from app.screens.search import SearchScreen
 from app.screens.bookmarks import BookmarkScreen
+from app.screens.account import AccountScreen
 
 KV = '''
 #:import dp kivy.metrics.dp
@@ -86,6 +87,62 @@ KV = '''
                     text: "⚙️  Settings"
                     on_release: app.go("settings")
 
+<AccountScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(16)
+        spacing: dp(10)
+        Label:
+            text: "AL-HUDA ACCOUNT"
+            color: .98,.86,.55,1
+            font_size: "22sp"
+            bold: True
+            size_hint_y: None
+            height: dp(55)
+        BoxLayout:
+            size_hint_y: None
+            height: dp(44)
+            Btn:
+                text: "LOGIN"
+                on_release: root.set_mode("login")
+            Btn:
+                text: "REGISTER"
+                on_release: root.set_mode("register")
+        TextInput:
+            id: name_input
+            hint_text: "Full name (registration)"
+            multiline: False
+            disabled: root.mode == "login"
+            size_hint_y: None
+            height: dp(48)
+        TextInput:
+            id: email_input
+            hint_text: "Email"
+            multiline: False
+            size_hint_y: None
+            height: dp(48)
+        TextInput:
+            id: password_input
+            hint_text: "Password (8+ characters)"
+            password: True
+            multiline: False
+            size_hint_y: None
+            height: dp(48)
+        Btn:
+            text: "CREATE ACCOUNT" if root.mode=="register" else "LOGIN"
+            size_hint_y: None
+            height: dp(50)
+            on_release: root.submit()
+        Label:
+            text: root.message
+            color: .92,.94,.92,1
+            text_size: self.width, None
+        Widget:
+        Btn:
+            text: "SIGN OUT"
+            size_hint_y: None
+            height: dp(46)
+            on_release: root.sign_out()
 <BookmarkScreen>:
     BoxLayout:
         orientation: "vertical"
@@ -619,6 +676,7 @@ class ALHudaApp(App):
         sm.add_widget(TasbeehScreen(name="tasbeeh"))
         sm.add_widget(SearchScreen(name="search"))
         sm.add_widget(BookmarkScreen(name="bookmarks"))
+        sm.add_widget(AccountScreen(name="account"))
         pages={
             "hadith":("Hadith","Book-wise collections • metadata foundation"),
             "prayer":("Prayer Times","Calculation, countdown and notification foundation"),

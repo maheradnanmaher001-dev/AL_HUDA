@@ -21,3 +21,10 @@
 - Added bookmarks/history screen
 - Added clear history control
 - Updated project roadmap
+
+## Step 12
+- Added AL-HUDA Login/Register screen
+- Added local account/session foundation
+- Added password hashing (PBKDF2-SHA256)
+- Added logout
+- Added roadmap/security notes
