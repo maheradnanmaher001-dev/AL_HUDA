@@ -1,0 +1,76 @@
+name: Extract AL-HUDA Step 14
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  extract-step14:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Find and extract Step 14 ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          ZIP="$(find . -maxdepth 1 -type f -name 'AL-HUDA_step14_settings_update.zip' -print -quit)"
+
+          if [ -z "$ZIP" ]; then
+            echo "Step 14 ZIP not found in repository root."
+            exit 1
+          fi
+
+          rm -rf .step14_extract
+          mkdir -p .step14_extract
+
+          unzip -oq "$ZIP" -d .step14_extract
+
+          # Copy only the Step 14 update files into the existing project.
+          mkdir -p app/services docs
+
+          cp .step14_extract/app/services/settings_service.py app/services/settings_service.py
+          cp .step14_extract/docs/STEP14_SETTINGS_INTEGRATION.md docs/STEP14_SETTINGS_INTEGRATION.md
+          cp .step14_extract/STEP14_MANIFEST.txt STEP14_MANIFEST.txt
+
+          rm -rf .step14_extract
+
+      - name: Verify Step 14 files
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          test -f main.py
+          test -f app/services/settings_service.py
+          test -f docs/STEP14_SETTINGS_INTEGRATION.md
+          test -f STEP14_MANIFEST.txt
+
+          python -m py_compile app/services/settings_service.py
+
+          echo "Step 14 verification passed."
+          echo "Existing main.py is still present."
+
+      - name: Commit Step 14
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add app/services/settings_service.py
+          git add docs/STEP14_SETTINGS_INTEGRATION.md
+          git add STEP14_MANIFEST.txt
+
+          if git diff --cached --quiet; then
+            echo "No Step 14 changes to commit."
+            exit 0
+          fi
+
+          git commit -m "Add AL-HUDA Step 14 Settings"
+          git push
