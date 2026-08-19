@@ -13,6 +13,7 @@ from app.screens.qibla import QiblaScreen
 from app.screens.azan import AzanScreen
 from app.screens.calendar import CalendarScreen
 from app.screens.dua import DuaScreen
+from app.screens.tasbeeh import TasbeehScreen
 
 KV = '''
 #:import dp kivy.metrics.dp
@@ -83,6 +84,43 @@ KV = '''
                     text: "⚙️  Settings"
                     on_release: app.go("settings")
 
+<TasbeehScreen>:
+    BoxLayout:
+        orientation:"vertical"; padding:dp(14); spacing:dp(10)
+        Label:
+            text:"TASBEEH"; color:.98,.86,.55,1; font_size:"21sp"; bold:True
+            size_hint_y:None; height:dp(45)
+        Label:
+            text:root.dhikr; color:.98,.86,.55,1; font_size:"22sp"; bold:True
+            size_hint_y:None; height:dp(40)
+        Button:
+            id:tap_button
+            text:str(root.count)+"\n\nTAP"; font_size:"28sp"
+            size_hint_y:None; height:dp(200)
+            on_release:root.tap()
+        Label:
+            text:"%d / %d   •   %d%%"%(root.count,root.target,int(root.progress*100))
+            color:.98,.86,.55,1; size_hint_y:None; height:dp(38)
+        ProgressBar:
+            max:1; value:root.progress; size_hint_y:None; height:dp(12)
+        BoxLayout:
+            size_hint_y:None; height:dp(45)
+            Btn: text:"33"; on_release:root.choose_target(33)
+            Btn: text:"99"; on_release:root.choose_target(99)
+            Btn: text:"Reset"; on_release:root.reset_count()
+        BoxLayout:
+            size_hint_y:None; height:dp(45)
+            Btn: text:"SubhanAllah"; on_release:root.choose_dhikr("SubhanAllah")
+            Btn: text:"Alhamdulillah"; on_release:root.choose_dhikr("Alhamdulillah")
+        BoxLayout:
+            size_hint_y:None; height:dp(45)
+            Btn: text:"Allahu Akbar"; on_release:root.choose_dhikr("Allahu Akbar")
+            Btn: text:"La ilaha illallah"; on_release:root.choose_dhikr("La ilaha illallah")
+        Btn:
+            text:"Vibration: ON" if root.vibration_enabled else "Vibration: OFF"
+            size_hint_y:None; height:dp(44); on_release:root.toggle_vibration()
+        Label:
+            text:root.status; color:.65,.72,.68,1
 <DuaScreen>:
     BoxLayout:
         orientation: "vertical"
@@ -470,6 +508,7 @@ class ALHudaApp(App):
         sm.add_widget(AzanScreen(name="azan"))
         sm.add_widget(CalendarScreen(name="calendar"))
         sm.add_widget(DuaScreen(name="dua"))
+        sm.add_widget(TasbeehScreen(name="tasbeeh"))
         pages={
             "hadith":("Hadith","Book-wise collections • metadata foundation"),
             "prayer":("Prayer Times","Calculation, countdown and notification foundation"),
