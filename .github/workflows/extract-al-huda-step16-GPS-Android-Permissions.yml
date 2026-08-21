@@ -1,0 +1,66 @@
+name: Extract AL-HUDA Step 16 - GPS Android Permissions
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  extract-step16:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Extract Step 16 package
+        run: |
+          set -euo pipefail
+          ZIP="AL-HUDA_step16_GPS_Android_Permissions_FINAL.zip"
+          test -f "$ZIP"
+          rm -rf .step16_extract
+          mkdir .step16_extract
+          unzip -oq "$ZIP" -d .step16_extract
+          mkdir -p app/services app/utils docs
+          cp .step16_extract/app/services/location_service.py app/services/location_service.py
+          cp .step16_extract/app/utils/android_permissions.py app/utils/android_permissions.py
+          cp .step16_extract/docs/STEP16_GPS_ANDROID_PERMISSIONS.md docs/STEP16_GPS_ANDROID_PERMISSIONS.md
+          cp .step16_extract/STEP16_MANIFEST.txt STEP16_MANIFEST.txt
+          rm -rf .step16_extract
+      - name: Safely update Android permissions and GPS dependency
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          spec=Path("buildozer.spec"); text=spec.read_text()
+          lines=text.splitlines()
+          idx=[i for i,x in enumerate(lines) if re.match(r'^\s*android\.permissions\s*=',x)]
+          needed=["ACCESS_COARSE_LOCATION","ACCESS_FINE_LOCATION"]
+          if idx:
+              i=idx[0]; items=[x.strip() for x in lines[i].split("=",1)[1].split(",") if x.strip()]
+              for p in needed:
+                  if p not in items: items.append(p)
+              lines[i]="android.permissions = "+",".join(items)
+              for j in reversed(idx[1:]): del lines[j]
+          else: lines += ["","android.permissions = "+",".join(needed)]
+          spec.write_text("\n".join(lines)+"\n")
+          req=Path("requirements.txt"); r=req.read_text().splitlines()
+          names={re.split(r'[<>=!~]',x.strip().lower(),1)[0] for x in r if x.strip() and not x.lstrip().startswith("#")}
+          if "plyer" not in names: req.write_text("\n".join(r+["plyer"])+"\n")
+          PY
+      - name: Verify Step 16
+        run: |
+          set -euo pipefail
+          test -f main.py; test -f buildozer.spec; test -f requirements.txt
+          test -f app/services/location_service.py; test -f app/utils/android_permissions.py
+          python -m py_compile app/services/location_service.py app/utils/android_permissions.py
+          grep -Eq 'android\.permissions[[:space:]]*=.*ACCESS_COARSE_LOCATION' buildozer.spec
+          grep -Eq 'android\.permissions[[:space:]]*=.*ACCESS_FINE_LOCATION' buildozer.spec
+          grep -Eiq '^plyer([<>=!~].*)?$' requirements.txt
+          echo "Step 16 GPS + Android Permissions verification PASSED."
+      - name: Commit Step 16
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/services/location_service.py app/utils/android_permissions.py docs/STEP16_GPS_ANDROID_PERMISSIONS.md STEP16_MANIFEST.txt buildozer.spec requirements.txt
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Implement AL-HUDA Step 16 GPS Android permissions"
+          git push
