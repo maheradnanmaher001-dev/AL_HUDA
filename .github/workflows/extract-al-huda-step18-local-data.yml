@@ -1,0 +1,41 @@
+name: Step 18 - Download and Verify Quran Hadith Data
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  step18:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Download complete local Quran and Hadith data
+        run: python tools/download_step18_data.py
+
+      - name: Verify complete local Quran and Hadith data
+        run: python tools/verify_step18_data.py
+
+      - name: Commit Step 18 local data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/
+          if git diff --cached --quiet; then
+            echo "No data changes to commit."
+          else
+            git commit -m "Add Step 18 local Quran Hadith data"
+            git push
+          fi
