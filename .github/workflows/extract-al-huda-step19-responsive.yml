@@ -10,6 +10,7 @@ jobs:
   step19:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -20,52 +21,109 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+
           ZIP_FILE="$(find . -maxdepth 1 -type f -name 'AL_HUDA_STEP19_RESPONSIVE_TEXT_SIZE.zip' -print -quit)"
+
           if [ -z "$ZIP_FILE" ]; then
             echo "::error::AL_HUDA_STEP19_RESPONSIVE_TEXT_SIZE.zip was not found in repository root."
             exit 1
           fi
+
           echo "ZIP_FILE=$ZIP_FILE" >> "$GITHUB_ENV"
 
       - name: Extract Step 19 files
         shell: bash
         run: |
           set -euo pipefail
+
           rm -rf .step19_package
-          mkdir .step19_package
+          mkdir -p .step19_package
+
           unzip -q "$ZIP_FILE" -d .step19_package
+
           test -f .step19_package/app/utils/responsive.py
           test -f .step19_package/app/screens/settings.py
+          test -f .step19_package/app/screens/common.py
+          test -f .step19_package/al_huda.kv
+          test -f .step19_package/STEP19_RESPONSIVE_SPEC.md
+
           cp -R .step19_package/app/. app/
           cp .step19_package/al_huda.kv al_huda.kv
           cp .step19_package/STEP19_RESPONSIVE_SPEC.md STEP19_RESPONSIVE_SPEC.md
 
       - name: Compile Step 19 Python files
-        run: python -m compileall -q app
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m compileall -q app
 
       - name: Verify responsive feature
         shell: bash
         run: |
           set -euo pipefail
+
           python - <<'PY'
           from pathlib import Path
-          from app.utils.responsive import MIN_TEXT_SCALE, MAX_TEXT_SCALE, STEP
-          assert MIN_TEXT_SCALE == 0.80
-          assert MAX_TEXT_SCALE == 1.60
-          assert STEP == 0.10
-          assert 'set_text_scale' in Path('app/screens/settings.py').read_text()
-          assert 'from app.utils.responsive import fs' in Path('app/screens/common.py').read_text()
-          assert 'fs(10)' in Path('al_huda.kv').read_text()
-          print('PASS: Step 19 responsive/text-size integration checks')
+          import ast
+
+          responsive_path = Path("app/utils/responsive.py")
+          settings_path = Path("app/screens/settings.py")
+          common_path = Path("app/screens/common.py")
+          kv_path = Path("al_huda.kv")
+
+          responsive = responsive_path.read_text(encoding="utf-8")
+          settings = settings_path.read_text(encoding="utf-8")
+          common = common_path.read_text(encoding="utf-8")
+          kv = kv_path.read_text(encoding="utf-8")
+
+          # Verify responsive.py syntax without importing Kivy.
+          ast.parse(responsive)
+
+          # Verify responsive configuration.
+          assert "MIN_TEXT_SCALE = 0.80" in responsive
+          assert "MAX_TEXT_SCALE = 1.60" in responsive
+          assert "STEP = 0.10" in responsive
+          assert "def fs(" in responsive
+
+          # Verify user text-size adjustment.
+          assert "set_text_scale" in settings
+
+          # Verify common responsive font helper.
+          assert "from app.utils.responsive import fs" in common
+
+          # Verify KV responsive font sizing.
+          assert "fs(10)" in kv
+
+          print("PASS: Responsive source verification")
+          print("PASS: Text scale 80%-160%")
+          print("PASS: Settings text-size integration")
+          print("PASS: KV responsive font integration")
+          print("PASS: Kivy import is not required for verification")
           PY
+
+      - name: Verify Step 19 files
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          test -f app/utils/responsive.py
+          test -f app/screens/settings.py
+          test -f app/screens/common.py
+          test -f al_huda.kv
+          test -f STEP19_RESPONSIVE_SPEC.md
+
+          echo "PASS: All Step 19 required files exist."
 
       - name: Commit Step 19
         shell: bash
         run: |
           set -euo pipefail
+
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
           git add app/ al_huda.kv STEP19_RESPONSIVE_SPEC.md
+
           if git diff --cached --quiet; then
             echo "No Step 19 changes to commit."
           else
