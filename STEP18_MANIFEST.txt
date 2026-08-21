@@ -1,0 +1,33 @@
+AL-HUDA STEP 18 — COMPLETE/VERIFIED QURAN + HADITH INTEGRATION
+
+QURAN
+- 114 Surahs
+- 30 Juz
+- 6236 ayahs
+- Arabic Uthmani
+- Urdu edition
+- English edition
+- Surah/Juz retrieval
+- Search
+- Local caching
+- Source metadata
+
+HADITH
+- 15 classical hadith collections from the documented 17-collection catalog
+- Book/section/hadith retrieval
+- Arabic/English/Urdu editions where the source publishes them
+- Number, grade, reference and narrator fields where supplied
+- Local caching
+- CDN + raw GitHub fallback
+
+IMPORTANT
+The application does NOT generate or rewrite religious text. It retrieves
+source data and preserves source identifiers. Translation availability can
+vary by collection/source; the verification workflow reports gaps instead
+of inventing translations.
+
+OFFLINE
+This step intentionally does not commit tens of thousands of hadith rows
+into the Git repository. The complete source catalog is available at runtime
+and is cached locally as users access it. This avoids oversized repository
+files and keeps the data source maintainable.

@@ -1,83 +1,81 @@
-# AL-HUDA
+# AL-HUDA — Islamic Companion
 
-## Step 2 — Quran Pak module
+A Python/Kivy Android Islamic companion app foundation with a premium green/gold theme and reusable slide/fade animations.
 
-Added:
-- 114 Surah browsing
-- 30 Juz browsing
-- Arabic Uthmani text
-- Urdu translation (Fateh Muhammad Jalandhry, `ur.jalandhry`)
-- English translation (Saheeh International, `en.sahih`)
-- Quran search
-- Local caching of fetched Surahs/Juz
-- Metadata for all 114 Surahs and 30 Juz
+## Included
 
-Quran data is fetched through the Al Quran Cloud REST API and cached locally.
-The API documents Surah, Juz, Ayah, Search and multi-edition endpoints.
-Arabic corpus attribution is retained through the provider/source metadata.
+- AL-HUDA branding + supplied icon
+- Animated splash screen
+- Animated screen transitions
+- Home dashboard
+- Quran Surah + Para/Juz navigation
+- Quran reader data model for Arabic/Urdu/English
+- Hadith book-wise architecture and metadata fields
+- Prayer-times architecture
+- Prayer notifications/short Adhan service architecture
+- Qibla bearing calculation + sensor-ready service
+- Universal search architecture
+- Bookmarks/history/notes database
+- Dua & Azkar
+- Tasbeeh
+- Islamic + Gregorian calendar
+- Ramadan screen
+- Account UI
+- Secure authentication backend starter (FastAPI + Argon2 + verification/reset codes)
+- Buildozer configuration
+- Data schemas/import guidance
 
-Next Quran work:
-- persistent bookmarks and last-read position
-- audio playback
-- Mushaf/page mode
-- font-size and translation controls
-- stronger offline packaging and verification
+## Important
 
-Sources:
-- Tanzil Project
-- Al Quran Cloud API
+This repository deliberately does not invent Quran/Hadith text. Put verified, licensed/source-traceable datasets into `data/` or connect an approved source/API. Preserve collection, book, chapter, number, narrator and grade metadata for Hadith.
 
+The backend must be deployed behind HTTPS and configured with real SMTP credentials before production authentication/email is used.
 
-## Step 3 — Hadith
+## Android build
 
-Book-wise Hadith foundation with Arabic, Urdu and English editions, search, Hadith number, reference and grade fields when supplied by the source. Initial catalog includes Bukhari, Muslim, Abu Dawud, Tirmidhi, Nasa'i, Ibn Majah, Muwatta Malik, Musnad Ahmad and Nawawi 40. Data is fetched/cached through the open hadith-api dataset; upstream edition availability and licensing/attribution will be verified before production release.
+On Linux/WSL:
 
+```bash
+python -m pip install -r requirements.txt
+buildozer android debug
+```
 
-## Step 4 — Prayer Times
-- Fajr, Sunrise, Dhuhr, Asr, Maghrib and Isha
-- City/country lookup
-- Local JSON cache
-- Live next-prayer countdown
-- Integrated Prayer Times screen
+APK output appears under `bin/`.
 
-Uses AlAdhan's timingsByCity endpoint. GPS, calculation-method selection, Azan/background notifications and stop controls will be implemented in the next prayer sub-step.
+## Backend
 
+```bash
+cd backend
+python -m pip install -r requirements.txt
+uvicorn main:app --host 0.0.0.0 --port 8000
+```
 
-## Step 5 — Live Qibla Compass
-- Accurate great-circle bearing to the Kaaba
-- Latitude/longitude input
-- 8-direction label
-- Android rotation-vector sensor bridge
-- Live heading and relative Qibla turn
-- Islamic-themed Qibla screen
+For production use HTTPS, a production database, strong secret keys and a real transactional email provider.
 
+## Structure
 
-## Step 6 — Azan & Notifications Foundation
-
-Added:
-- Azan/notification settings screen
-- Enable/disable notification control
-- Stop-active-Azan control hook
-- Next-prayer scheduling foundation
-- Android AlarmManager integration hook
-- Safe non-Android fallback
-
-The complete production background-audio receiver, Android notification channel, boot rescheduling and audio stop action require final Android packaging/manifest integration.
-
-
-## Step 7 — Islamic + Gregorian Calendar
-
-Added:
-- Islamic/Hijri date label
-- Gregorian month calendar
-- January and every Gregorian month through the same calendar
-- Previous/next month navigation
-- Today button
-- 42-cell month grid foundation
-- AL-HUDA calendar screen
-
-Note: the arithmetic Hijri conversion is a foundation. For publication-grade dates and moon-sighting-sensitive observances, a selectable official/local calendar source should be used.
-
-
-## Step 8 — Duas & Azkar
-Added a Dua/Azkar screen with Arabic, Urdu, English, references, categories foundation and search. `PROJECT_ROADMAP.md` and `CHANGELOG.md` are now included to preserve project continuity between chats.
+```text
+AL-HUDA/
+├── main.py
+├── al_huda.kv
+├── buildozer.spec
+├── requirements.txt
+├── .env.example
+├── app/
+│   ├── database.py
+│   ├── theme.py
+│   ├── animations.py
+│   ├── screens/
+│   ├── services/
+│   └── utils/
+├── backend/
+│   ├── main.py
+│   ├── requirements.txt
+│   └── .env.example
+├── assets/
+│   ├── icon.png
+│   └── splash.png
+└── data/
+    ├── quran/README.md
+    └── hadith/README.md
+```
