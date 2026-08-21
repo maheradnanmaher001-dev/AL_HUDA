@@ -1,0 +1,74 @@
+name: Step 19 - Responsive Design and Text Size
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  step19:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Locate Step 19 ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP_FILE="$(find . -maxdepth 1 -type f -name 'AL_HUDA_STEP19_RESPONSIVE_TEXT_SIZE.zip' -print -quit)"
+          if [ -z "$ZIP_FILE" ]; then
+            echo "::error::AL_HUDA_STEP19_RESPONSIVE_TEXT_SIZE.zip was not found in repository root."
+            exit 1
+          fi
+          echo "ZIP_FILE=$ZIP_FILE" >> "$GITHUB_ENV"
+
+      - name: Extract Step 19 files
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .step19_package
+          mkdir .step19_package
+          unzip -q "$ZIP_FILE" -d .step19_package
+          test -f .step19_package/app/utils/responsive.py
+          test -f .step19_package/app/screens/settings.py
+          cp -R .step19_package/app/. app/
+          cp .step19_package/al_huda.kv al_huda.kv
+          cp .step19_package/STEP19_RESPONSIVE_SPEC.md STEP19_RESPONSIVE_SPEC.md
+
+      - name: Compile Step 19 Python files
+        run: python -m compileall -q app
+
+      - name: Verify responsive feature
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          from app.utils.responsive import MIN_TEXT_SCALE, MAX_TEXT_SCALE, STEP
+          assert MIN_TEXT_SCALE == 0.80
+          assert MAX_TEXT_SCALE == 1.60
+          assert STEP == 0.10
+          assert 'set_text_scale' in Path('app/screens/settings.py').read_text()
+          assert 'from app.utils.responsive import fs' in Path('app/screens/common.py').read_text()
+          assert 'fs(10)' in Path('al_huda.kv').read_text()
+          print('PASS: Step 19 responsive/text-size integration checks')
+          PY
+
+      - name: Commit Step 19
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/ al_huda.kv STEP19_RESPONSIVE_SPEC.md
+          if git diff --cached --quiet; then
+            echo "No Step 19 changes to commit."
+          else
+            git commit -m "Add Step 19 responsive design and text size"
+            git push
+          fi
