@@ -1,0 +1,88 @@
+name: Extract AL-HUDA Step 17 - Production Background Azan
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  extract-step17:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract Step 17 package
+        run: |
+          set -euo pipefail
+          ZIP="AL-HUDA_step17_Production_Background_Azan_FINAL.zip"
+          test -f "$ZIP"
+          rm -rf .step17_extract
+          mkdir .step17_extract
+          unzip -oq "$ZIP" -d .step17_extract
+          mkdir -p app/services docs
+          cp .step17_extract/app/services/azan_service.py app/services/azan_service.py
+          cp .step17_extract/docs/STEP17_PRODUCTION_BACKGROUND_AZAN.md docs/STEP17_PRODUCTION_BACKGROUND_AZAN.md
+          cp .step17_extract/STEP17_MANIFEST.txt STEP17_MANIFEST.txt
+          rm -rf .step17_extract
+
+      - name: Safely prepare Android background-audio foundation
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          spec=Path("buildozer.spec")
+          text=spec.read_text()
+          lines=text.splitlines()
+
+          def upsert(key, value):
+              global lines
+              found=[i for i,x in enumerate(lines) if re.match(r'^\s*'+re.escape(key)+r'\s*=',x)]
+              if found:
+                  lines[found[0]]=key+" = "+value
+                  for j in reversed(found[1:]): del lines[j]
+              else:
+                  lines += [key+" = "+value]
+
+          # Keep existing values and only add missing Android permissions.
+          needed=["POST_NOTIFICATIONS","FOREGROUND_SERVICE","FOREGROUND_SERVICE_MEDIA_PLAYBACK"]
+          idx=[i for i,x in enumerate(lines) if re.match(r'^\s*android\.permissions\s*=',x)]
+          if idx:
+              i=idx[0]
+              vals=[x.strip() for x in lines[i].split("=",1)[1].split(",") if x.strip()]
+              for p in needed:
+                  if p not in vals: vals.append(p)
+              lines[i]="android.permissions = "+",".join(vals)
+              for j in reversed(idx[1:]): del lines[j]
+          else:
+              lines += ["","android.permissions = "+",".join(needed)]
+
+          # Ensure the existing Android service declaration has a sensible
+          # foreground service class entry without overwriting unrelated values.
+          service_key="android.add_src"
+          if not any(re.match(r'^\s*'+re.escape(service_key)+r'\s*=',x) for x in lines):
+              lines += ["", "# Step 17 service assets are kept in the existing Android source layer."]
+
+          spec.write_text("\n".join(lines)+"\n")
+          PY
+
+      - name: Verify Step 17
+        run: |
+          set -euo pipefail
+          test -f main.py
+          test -f buildozer.spec
+          test -f requirements.txt
+          test -f app/services/azan_service.py
+          python -m py_compile app/services/azan_service.py
+          grep -Eq 'android\.permissions[[:space:]]*=.*POST_NOTIFICATIONS' buildozer.spec
+          grep -Eq 'android\.permissions[[:space:]]*=.*FOREGROUND_SERVICE' buildozer.spec
+          echo "Step 17 Azan service verification PASSED."
+
+      - name: Commit Step 17
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/services/azan_service.py docs/STEP17_PRODUCTION_BACKGROUND_AZAN.md STEP17_MANIFEST.txt buildozer.spec
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Implement AL-HUDA Step 17 background Azan"
+          git push
