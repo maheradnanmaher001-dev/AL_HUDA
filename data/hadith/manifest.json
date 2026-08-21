@@ -1,0 +1,344 @@
+{
+  "collections": 10,
+  "editions": 37,
+  "languages": [
+    "Arabic",
+    "English",
+    "Urdu"
+  ],
+  "items": [
+    {
+      "collection_key": "abudawud",
+      "collection_name": "Sunan Abu Dawud",
+      "language": "Arabic",
+      "edition": "ara-abudawud",
+      "hadith_count": 5274,
+      "file": "data/hadith/ara-abudawud.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-abudawud.json"
+    },
+    {
+      "collection_key": "abudawud",
+      "collection_name": "Sunan Abu Dawud",
+      "language": "Arabic",
+      "edition": "ara-abudawud1",
+      "hadith_count": 5274,
+      "file": "data/hadith/ara-abudawud1.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-abudawud1.json"
+    },
+    {
+      "collection_key": "abudawud",
+      "collection_name": "Sunan Abu Dawud",
+      "language": "English",
+      "edition": "eng-abudawud",
+      "hadith_count": 5274,
+      "file": "data/hadith/eng-abudawud.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-abudawud.json"
+    },
+    {
+      "collection_key": "abudawud",
+      "collection_name": "Sunan Abu Dawud",
+      "language": "Urdu",
+      "edition": "urd-abudawud",
+      "hadith_count": 5274,
+      "file": "data/hadith/urd-abudawud.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/urd-abudawud.json"
+    },
+    {
+      "collection_key": "bukhari",
+      "collection_name": "Sahih al Bukhari",
+      "language": "Arabic",
+      "edition": "ara-bukhari",
+      "hadith_count": 7589,
+      "file": "data/hadith/ara-bukhari.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari.json"
+    },
+    {
+      "collection_key": "bukhari",
+      "collection_name": "Sahih al Bukhari",
+      "language": "Arabic",
+      "edition": "ara-bukhari1",
+      "hadith_count": 7589,
+      "file": "data/hadith/ara-bukhari1.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-bukhari1.json"
+    },
+    {
+      "collection_key": "bukhari",
+      "collection_name": "Sahih al Bukhari",
+      "language": "English",
+      "edition": "eng-bukhari",
+      "hadith_count": 7589,
+      "file": "data/hadith/eng-bukhari.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-bukhari.json"
+    },
+    {
+      "collection_key": "bukhari",
+      "collection_name": "Sahih al Bukhari",
+      "language": "Urdu",
+      "edition": "urd-bukhari",
+      "hadith_count": 7589,
+      "file": "data/hadith/urd-bukhari.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/urd-bukhari.json"
+    },
+    {
+      "collection_key": "dehlawi",
+      "collection_name": "Forty Hadith of Shah Waliullah Dehlawi",
+      "language": "Arabic",
+      "edition": "ara-dehlawi",
+      "hadith_count": 40,
+      "file": "data/hadith/ara-dehlawi.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-dehlawi.json"
+    },
+    {
+      "collection_key": "dehlawi",
+      "collection_name": "Forty Hadith of Shah Waliullah Dehlawi",
+      "language": "Arabic",
+      "edition": "ara-dehlawi1",
+      "hadith_count": 40,
+      "file": "data/hadith/ara-dehlawi1.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-dehlawi1.json"
+    },
+    {
+      "collection_key": "dehlawi",
+      "collection_name": "Forty Hadith of Shah Waliullah Dehlawi",
+      "language": "English",
+      "edition": "eng-dehlawi",
+      "hadith_count": 40,
+      "file": "data/hadith/eng-dehlawi.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-dehlawi.json"
+    },
+    {
+      "collection_key": "ibnmajah",
+      "collection_name": "Sunan Ibn Majah",
+      "language": "Arabic",
+      "edition": "ara-ibnmajah",
+      "hadith_count": 4343,
+      "file": "data/hadith/ara-ibnmajah.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-ibnmajah.json"
+    },
+    {
+      "collection_key": "ibnmajah",
+      "collection_name": "Sunan Ibn Majah",
+      "language": "Arabic",
+      "edition": "ara-ibnmajah1",
+      "hadith_count": 4343,
+      "file": "data/hadith/ara-ibnmajah1.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-ibnmajah1.json"
+    },
+    {
+      "collection_key": "ibnmajah",
+      "collection_name": "Sunan Ibn Majah",
+      "language": "English",
+      "edition": "eng-ibnmajah",
+      "hadith_count": 4343,
+      "file": "data/hadith/eng-ibnmajah.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-ibnmajah.json"
+    },
+    {
+      "collection_key": "ibnmajah",
+      "collection_name": "Sunan Ibn Majah",
+      "language": "Urdu",
+      "edition": "urd-ibnmajah",
+      "hadith_count": 4343,
+      "file": "data/hadith/urd-ibnmajah.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/urd-ibnmajah.json"
+    },
+    {
+      "collection_key": "malik",
+      "collection_name": "Muwatta Malik",
+      "language": "Arabic",
+      "edition": "ara-malik",
+      "hadith_count": 1858,
+      "file": "data/hadith/ara-malik.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-malik.json"
+    },
+    {
+      "collection_key": "malik",
+      "collection_name": "Muwatta Malik",
+      "language": "Arabic",
+      "edition": "ara-malik1",
+      "hadith_count": 1858,
+      "file": "data/hadith/ara-malik1.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-malik1.json"
+    },
+    {
+      "collection_key": "malik",
+      "collection_name": "Muwatta Malik",
+      "language": "English",
+      "edition": "eng-malik",
+      "hadith_count": 1858,
+      "file": "data/hadith/eng-malik.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-malik.json"
+    },
+    {
+      "collection_key": "malik",
+      "collection_name": "Muwatta Malik",
+      "language": "Urdu",
+      "edition": "urd-malik",
+      "hadith_count": 1889,
+      "file": "data/hadith/urd-malik.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/urd-malik.json"
+    },
+    {
+      "collection_key": "muslim",
+      "collection_name": "Sahih Muslim",
+      "language": "Arabic",
+      "edition": "ara-muslim",
+      "hadith_count": 7563,
+      "file": "data/hadith/ara-muslim.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-muslim.json"
+    },
+    {
+      "collection_key": "muslim",
+      "collection_name": "Sahih Muslim",
+      "language": "Arabic",
+      "edition": "ara-muslim1",
+      "hadith_count": 7563,
+      "file": "data/hadith/ara-muslim1.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-muslim1.json"
+    },
+    {
+      "collection_key": "muslim",
+      "collection_name": "Sahih Muslim",
+      "language": "English",
+      "edition": "eng-muslim",
+      "hadith_count": 7563,
+      "file": "data/hadith/eng-muslim.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-muslim.json"
+    },
+    {
+      "collection_key": "muslim",
+      "collection_name": "Sahih Muslim",
+      "language": "Urdu",
+      "edition": "urd-muslim",
+      "hadith_count": 7564,
+      "file": "data/hadith/urd-muslim.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/urd-muslim.json"
+    },
+    {
+      "collection_key": "nasai",
+      "collection_name": "Sunan an Nasai",
+      "language": "Arabic",
+      "edition": "ara-nasai",
+      "hadith_count": 5765,
+      "file": "data/hadith/ara-nasai.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-nasai.json"
+    },
+    {
+      "collection_key": "nasai",
+      "collection_name": "Sunan an Nasai",
+      "language": "Arabic",
+      "edition": "ara-nasai1",
+      "hadith_count": 5765,
+      "file": "data/hadith/ara-nasai1.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-nasai1.json"
+    },
+    {
+      "collection_key": "nasai",
+      "collection_name": "Sunan an Nasai",
+      "language": "English",
+      "edition": "eng-nasai",
+      "hadith_count": 5765,
+      "file": "data/hadith/eng-nasai.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-nasai.json"
+    },
+    {
+      "collection_key": "nasai",
+      "collection_name": "Sunan an Nasai",
+      "language": "Urdu",
+      "edition": "urd-nasai",
+      "hadith_count": 5765,
+      "file": "data/hadith/urd-nasai.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/urd-nasai.json"
+    },
+    {
+      "collection_key": "nawawi",
+      "collection_name": "Forty Hadith of an-Nawawi",
+      "language": "Arabic",
+      "edition": "ara-nawawi",
+      "hadith_count": 42,
+      "file": "data/hadith/ara-nawawi.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-nawawi.json"
+    },
+    {
+      "collection_key": "nawawi",
+      "collection_name": "Forty Hadith of an-Nawawi",
+      "language": "Arabic",
+      "edition": "ara-nawawi1",
+      "hadith_count": 42,
+      "file": "data/hadith/ara-nawawi1.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-nawawi1.json"
+    },
+    {
+      "collection_key": "nawawi",
+      "collection_name": "Forty Hadith of an-Nawawi",
+      "language": "English",
+      "edition": "eng-nawawi",
+      "hadith_count": 42,
+      "file": "data/hadith/eng-nawawi.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-nawawi.json"
+    },
+    {
+      "collection_key": "qudsi",
+      "collection_name": "Forty Hadith Qudsi",
+      "language": "Arabic",
+      "edition": "ara-qudsi",
+      "hadith_count": 40,
+      "file": "data/hadith/ara-qudsi.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-qudsi.json"
+    },
+    {
+      "collection_key": "qudsi",
+      "collection_name": "Forty Hadith Qudsi",
+      "language": "Arabic",
+      "edition": "ara-qudsi1",
+      "hadith_count": 40,
+      "file": "data/hadith/ara-qudsi1.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-qudsi1.json"
+    },
+    {
+      "collection_key": "qudsi",
+      "collection_name": "Forty Hadith Qudsi",
+      "language": "English",
+      "edition": "eng-qudsi",
+      "hadith_count": 40,
+      "file": "data/hadith/eng-qudsi.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-qudsi.json"
+    },
+    {
+      "collection_key": "tirmidhi",
+      "collection_name": "Jami At Tirmidhi",
+      "language": "Arabic",
+      "edition": "ara-tirmidhi",
+      "hadith_count": 3998,
+      "file": "data/hadith/ara-tirmidhi.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-tirmidhi.json"
+    },
+    {
+      "collection_key": "tirmidhi",
+      "collection_name": "Jami At Tirmidhi",
+      "language": "Arabic",
+      "edition": "ara-tirmidhi1",
+      "hadith_count": 3998,
+      "file": "data/hadith/ara-tirmidhi1.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-tirmidhi1.json"
+    },
+    {
+      "collection_key": "tirmidhi",
+      "collection_name": "Jami At Tirmidhi",
+      "language": "English",
+      "edition": "eng-tirmidhi",
+      "hadith_count": 3998,
+      "file": "data/hadith/eng-tirmidhi.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-tirmidhi.json"
+    },
+    {
+      "collection_key": "tirmidhi",
+      "collection_name": "Jami At Tirmidhi",
+      "language": "Urdu",
+      "edition": "urd-tirmidhi",
+      "hadith_count": 3998,
+      "file": "data/hadith/urd-tirmidhi.json",
+      "source": "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/urd-tirmidhi.json"
+    }
+  ]
+}

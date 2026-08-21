@@ -1,0 +1,72 @@
+{
+  "step": 18,
+  "status": "verified",
+  "quran": {
+    "dataset": "AL-HUDA local Quran",
+    "surahs": 114,
+    "ayahs": 6236,
+    "juz": 30,
+    "arabic": "quran_arabic_uthmani.json",
+    "english": "quran_english.json",
+    "urdu": "quran_urdu.json",
+    "sources": [
+      "https://raw.githubusercontent.com/mjmirza/quran-dataset/main/data/quran.json",
+      "https://api.alquran.cloud/v1/quran/en.asad",
+      "https://api.alquran.cloud/v1/quran/ur.jalandhry"
+    ]
+  },
+  "hadith": {
+    "collections": 10,
+    "editions": 37,
+    "languages": [
+      "Arabic",
+      "English",
+      "Urdu"
+    ]
+  },
+  "files_sha256": {
+    "data/quran/catalogue.json": "8bd7c06753eb202a31cfd9ceb33032430ee0e7e0e159facb85a95db7ac83a5a7",
+    "data/quran/quran_arabic_uthmani.json": "8b06e904890d9b918a470381c61c0a02bea70dcd595c56b6407c839483750de3",
+    "data/quran/quran_english.json": "d82fe9b5b0f144f85f0d3d939e61769ac0b43ca261cdad3af12836b8a48a1480",
+    "data/quran/quran_urdu.json": "8cc59a1530058dfd638b052274b2b70a6302e1d0ae030dac7b63328cd6f750e7",
+    "data/hadith/ara-abudawud.json": "cb95cce9378930645a72d9f21b71e33e65831a8df00a9b9326c4daac3f138f46",
+    "data/hadith/ara-abudawud1.json": "846835803202a97788c21ed387fc3cdd437ea11004ef12b6266cc670102adee6",
+    "data/hadith/ara-bukhari.json": "1e5811e79d599db420fdc556f893a723cd3118d6529912fb1cfc7ae3108e6d4d",
+    "data/hadith/ara-bukhari1.json": "46367608e412d1bb5e18a3a777f6ec2b143c7313f0ce7b4693d353d06948d39d",
+    "data/hadith/ara-dehlawi.json": "0b8ae39c844d44f0472ad53c314f07463e3411124ca8eacac92cbe95fe9ad2d6",
+    "data/hadith/ara-dehlawi1.json": "05b7d3a9fc0add2b6c0a5fded18b3ce60f55955f4cebe58148a2303214601754",
+    "data/hadith/ara-ibnmajah.json": "07ef6a808d8b48deaaad6cb319783d938a84c866356566038104b153e5af9781",
+    "data/hadith/ara-ibnmajah1.json": "fb7efb16e0882a0f91d59700bdfa71f08cff264434035322d48f153132ff9bb7",
+    "data/hadith/ara-malik.json": "60e1822cb68b8ecddcdb60954427f39de64c13f6738266d3b504d8d93cd0c695",
+    "data/hadith/ara-malik1.json": "a5f2e3a0bff905384cb81001cfce011fa4ef0ec7cca4c037b7bfad13bbf0f800",
+    "data/hadith/ara-muslim.json": "d644316e9113385754c0ba3620f2ccf58d8df0f40039b60f56dfaa308d3358c7",
+    "data/hadith/ara-muslim1.json": "a0ca7361259255421b66798f717a99c3cdd8248f080161e7eae7a808c0e74c44",
+    "data/hadith/ara-nasai.json": "fc2d0f6f045205a3234fe51512adf0416ad70c60ac9dd71a6923588a0c8d6e8b",
+    "data/hadith/ara-nasai1.json": "62ab612fa943e1547052599bf6325b5eb60a92d87bfd3b5530bbebf80db7cd62",
+    "data/hadith/ara-nawawi.json": "dfcef797b1191bb80df61b9a74ec7fedd4e7d78d96ba025f2a7505dfb5f22acd",
+    "data/hadith/ara-nawawi1.json": "6c6434848f1bc398ec9df546f29dca94ffabb9649db8b989f8cc3c2d4fcd20fa",
+    "data/hadith/ara-qudsi.json": "9bd0e43aa9f61f303aa8e19255b0d454fd5d37256f88bc5cf94cfaae926773a3",
+    "data/hadith/ara-qudsi1.json": "1b014a18c7219d4a181d4a745055e018d669fcf62fd052510aac8a07042eaf0a",
+    "data/hadith/ara-tirmidhi.json": "b99cf15357c4814a322e20168d0c7a61337cf538a5cd21349a3a091187241946",
+    "data/hadith/ara-tirmidhi1.json": "ae45e619cdb93a611ca384a74bd4b17812e7c9aeeb3791e5d26cc37f24df7186",
+    "data/hadith/editions_catalogue.json": "a3ae1044d4fae0f5c14f0fbc2fccebaa46b51d675b49b0672042f3e0852bb4e8",
+    "data/hadith/eng-abudawud.json": "e6f2c6015626ccf1c897230ab6036c25b6321aa0d90d5658133c33f17d8b5014",
+    "data/hadith/eng-bukhari.json": "12da16e8c834634fed4d336d02704e2cc0e60684921f1a9a1eeedad98bad9ddf",
+    "data/hadith/eng-dehlawi.json": "1b40f1620e3c12d60b8dcd5ae41a907ca0e70c775dcf2e6924bd1c954dc35729",
+    "data/hadith/eng-ibnmajah.json": "7d09935af376fb1d0e3396d8fd9d820e24b07759a42a97cb1e86fe7ae49309ab",
+    "data/hadith/eng-malik.json": "1870f20c0ff1a00358f851f4bd2d6596c573470815dd5ebacb7a9a1162df4689",
+    "data/hadith/eng-muslim.json": "0874e420765a8a2eed80477269be49b9f0cf1d807dc7096fcf29f14a9ea3ed26",
+    "data/hadith/eng-nasai.json": "c662d331af0147b4dc4dc410dbdc0aa41bd530cd7ba333225eb6aed21fe7fb4a",
+    "data/hadith/eng-nawawi.json": "9738829ef930da0fcc68b045aa5af104a214c2758c36d0ee16107a5f49541865",
+    "data/hadith/eng-qudsi.json": "ad12fa24c291c535cbd9fb374e29c627364ab8eece9d8cdf26d6c0a360dac6bf",
+    "data/hadith/eng-tirmidhi.json": "bb42f1bb25d46e6debe60c6f7b29505b0dee40622f0b83b2b284fa8661c49352",
+    "data/hadith/manifest.json": "dc83f5cbc330f3ac053346a9521f0eaacfb8c61af0268ec7098cd0aa2fee2438",
+    "data/hadith/urd-abudawud.json": "8bca4e792579271fedc4d87155610a94a2facdba9eb97dbc8efd2cc96807277d",
+    "data/hadith/urd-bukhari.json": "4e3e407921f6f28913429794e10e45abad1077199af94205b9b99aef7cb902c6",
+    "data/hadith/urd-ibnmajah.json": "b70186cabf845603a6d8e3d9b6648847cb9437fae5be16f8df4884065a20a03f",
+    "data/hadith/urd-malik.json": "c95a54087cd201fcfdb535a503c26eaec5966f475b9479c4f827fd8d1ac26d70",
+    "data/hadith/urd-muslim.json": "7647ed30342ec57cdb0469e4a7af1b8720b2aba8272aac3aecc7efe03bc6e24d",
+    "data/hadith/urd-nasai.json": "89821cc55bb160769fddd9150769df581d31b53e403979584e6e9341d4040343",
+    "data/hadith/urd-tirmidhi.json": "f865d5dad263ab93494310e1e09507a58a6391c1945d733d9406812d2fb39fd8"
+  }
+}

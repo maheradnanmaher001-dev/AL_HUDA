@@ -1,0 +1,14 @@
+{
+  "dataset": "AL-HUDA local Quran",
+  "surahs": 114,
+  "ayahs": 6236,
+  "juz": 30,
+  "arabic": "quran_arabic_uthmani.json",
+  "english": "quran_english.json",
+  "urdu": "quran_urdu.json",
+  "sources": [
+    "https://raw.githubusercontent.com/mjmirza/quran-dataset/main/data/quran.json",
+    "https://api.alquran.cloud/v1/quran/en.asad",
+    "https://api.alquran.cloud/v1/quran/ur.jalandhry"
+  ]
+}
