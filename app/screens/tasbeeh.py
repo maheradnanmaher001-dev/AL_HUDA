@@ -1,46 +1,21 @@
-from kivy.properties import NumericProperty,StringProperty,BooleanProperty
-from kivy.animation import Animation
 from kivy.uix.screenmanager import Screen
-from app.services.tasbeeh_service import load_state,increment,reset,set_target,set_dhikr
-
-class TasbeehScreen(Screen):
-    count=NumericProperty(0); target=NumericProperty(33); progress=NumericProperty(0)
-    dhikr=StringProperty("SubhanAllah"); status=StringProperty("Tap to count")
-    vibration_enabled=BooleanProperty(True)
-
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
+from kivy.uix.label import Label
+from kivy.metrics import dp
+from app.utils.responsive import fs
+from app.screens.base import ScreenBase
+from app.screens.common import header
+from app.theme import GOLD,TEXT,CARD
+class TasbeehScreen(ScreenBase):
+    count=0
     def on_enter(self):
-        self.state=load_state()
-        self.count=int(self.state.get("count",0)); self.target=int(self.state.get("target",33))
-        self.dhikr=self.state.get("dhikr","SubhanAllah"); self.update_progress()
-
-    def tap(self):
-        self.count=increment(self.state); self.update_progress()
-        self.status="Target reached — MashaAllah!" if self.count>=self.target else "Keep going"
-        if "tap_button" in self.ids:
-            Animation.cancel_all(self.ids.tap_button)
-            (Animation(scale=0.96,duration=.06)+Animation(scale=1,duration=.10)).start(self.ids.tap_button)
-        if self.vibration_enabled: self.vibrate()
-
-    def reset_count(self):
-        self.count=reset(self.state); self.update_progress(); self.status="Counter reset"
-
-    def choose_target(self,n):
-        try: self.target=set_target(self.state,n); self.update_progress()
-        except Exception: self.status="Invalid target"
-
-    def choose_dhikr(self,n):
-        self.dhikr=set_dhikr(self.state,n); self.status=n+" selected"
-
-    def update_progress(self): self.progress=min(1,self.count/float(self.target or 1))
-
-    def toggle_vibration(self): self.vibration_enabled=not self.vibration_enabled
-
-    def vibrate(self):
-        try:
-            from kivy.utils import platform
-            if platform!="android": return
-            from jnius import autoclass
-            A=autoclass("org.kivy.android.PythonActivity")
-            C=autoclass("android.content.Context")
-            A.mActivity.getSystemService(C.VIBRATOR_SERVICE).vibrate(20)
-        except Exception: pass
+        if self.children:return
+        root=BoxLayout(orientation="vertical",padding=dp(20),spacing=dp(12));root.add_widget(header("Tasbeeh"))
+        label=Label(text="0",color=GOLD,font_size=fs(70))
+        def add(*_): self.count+=1;label.text=str(self.count)
+        b=Button(text="TAP TO COUNT",background_normal="",background_color=CARD,color=GOLD,font_size=fs(22))
+        b.bind(on_release=add);root.add_widget(label);root.add_widget(b)
+        for x in ("33","100","Custom","Reset"):
+            root.add_widget(Button(text=x,background_normal="",background_color=CARD,color=TEXT,size_hint_y=None,height=dp(45)))
+        self.add_widget(root)

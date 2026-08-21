@@ -1,0 +1,76 @@
+#:import dp kivy.metrics.dp
+#:import fs app.utils.responsive.fs
+
+<ScreenBase>:
+    canvas.before:
+        Color:
+            rgba: app.bg
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<NavBar@BoxLayout>:
+    size_hint_y: None
+    height: dp(62)
+    padding: dp(5)
+    spacing: dp(3)
+    canvas.before:
+        Color:
+            rgba: app.nav_bg
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<NavBtn@Button>:
+    background_normal: ""
+    background_color: 0,0,0,0
+    color: app.gold
+    font_size: fs(10)
+    bold: True
+
+<GoldButton@Button>:
+    background_normal: ""
+    background_color: app.card2
+    color: app.gold
+    bold: True
+    size_hint_y: None
+    height: dp(50)
+
+<DarkButton@Button>:
+    background_normal: ""
+    background_color: app.card
+    color: app.text
+    size_hint_y: None
+    height: dp(50)
+
+<TextInput>:
+    background_color: app.card
+    foreground_color: app.text
+    hint_text_color: app.muted
+    cursor_color: app.gold
+    padding: dp(12)
+
+<BottomNavScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        Screen:
+            name: "content"
+        NavBar:
+            NavBtn:
+                text: "Home"
+                on_release: root.go("home")
+            NavBtn:
+                text: "Quran"
+                on_release: root.go("quran")
+            NavBtn:
+                text: "Hadith"
+                on_release: root.go("hadith")
+            NavBtn:
+                text: "Prayer"
+                on_release: root.go("prayer")
+            NavBtn:
+                text: "Qibla"
+                on_release: root.go("qibla")
+            NavBtn:
+                text: "More"
+                on_release: root.go("settings")

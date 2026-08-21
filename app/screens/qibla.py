@@ -1,41 +1,19 @@
-from kivy.clock import Clock
-from kivy.properties import NumericProperty, StringProperty
 from kivy.uix.screenmanager import Screen
-from app.services.qibla_service import qibla_bearing, direction_name, QiblaSensor
-
-class QiblaScreen(Screen):
-    bearing=NumericProperty(0)
-    heading=NumericProperty(0)
-    relative=NumericProperty(0)
-    status=StringProperty("Set your location")
-    sensor_status=StringProperty("Starting compass…")
-
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.label import Label
+from kivy.uix.button import Button
+from kivy.metrics import dp
+from app.utils.responsive import fs
+from app.screens.base import ScreenBase
+from app.screens.common import header
+from app.theme import GOLD,TEXT,MUTED,CARD
+class QiblaScreen(ScreenBase):
     def on_enter(self):
-        self.calculate()
-        self.sensor=QiblaSensor()
-        ok=self.sensor.start(self._heading)
-        self.sensor_status="Live compass active" if ok else "Compass sensor unavailable"
-
-    def on_leave(self):
-        if hasattr(self,"sensor"): self.sensor.stop()
-
-    def calculate(self):
-        try:
-            lat=float(self.ids.latitude.text)
-            lon=float(self.ids.longitude.text)
-            self.bearing=qibla_bearing(lat,lon)
-            self.status=f"Qibla: {self.bearing:.1f}° • {direction_name(self.bearing)}"
-            self.update_relative()
-        except Exception:
-            self.status="Enter valid latitude and longitude."
-
-    def _heading(self,value):
-        Clock.schedule_once(lambda _: self._set_heading(value))
-    def _set_heading(self,value):
-        self.heading=value
-        self.update_relative()
-
-    def update_relative(self):
-        self.relative=(self.bearing-self.heading+360)%360
-        if "needle" in self.ids:
-            self.ids.needle.rotation=self.relative
+        if self.children:return
+        root=BoxLayout(orientation="vertical",padding=dp(14),spacing=dp(9))
+        root.add_widget(header("🕋 Qibla Compass"))
+        root.add_widget(Label(text="             N\n             ↑\n      W  ←  🕋  →  E\n             ↓\n             S",color=GOLD,font_size=fs(27),halign="center"))
+        root.add_widget(Label(text="Bearing: --°\nDistance to Kaaba: -- km",color=TEXT,font_size=fs(18),halign="center"))
+        root.add_widget(Button(text="⌖ Calibrate Compass",background_normal="",background_color=CARD,color=GOLD,size_hint_y=None,height=dp(50)))
+        root.add_widget(Label(text="Live phone sensor + GPS service is ready for implementation.",color=MUTED,font_size=fs(12)))
+        self.add_widget(root)

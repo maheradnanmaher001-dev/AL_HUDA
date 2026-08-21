@@ -1,38 +1,20 @@
-from datetime import date
-from kivy.properties import StringProperty, NumericProperty
 from kivy.uix.screenmanager import Screen
-from app.services.calendar_service import hijri_label, month_grid
-
-class CalendarScreen(Screen):
-    title=StringProperty("")
-    hijri=StringProperty("")
-    selected=StringProperty("")
-    year=NumericProperty(date.today().year)
-    month=NumericProperty(date.today().month)
-
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
+from kivy.uix.label import Label
+from kivy.metrics import dp
+from app.utils.responsive import fs
+from app.screens.base import ScreenBase
+from app.screens.common import header
+from app.theme import GOLD,TEXT,MUTED,CARD
+class CalendarScreen(ScreenBase):
     def on_enter(self):
-        self.refresh()
-
-    def refresh(self):
-        d=date(int(self.year),int(self.month),1)
-        self.title=d.strftime("%B %Y")
-        self.hijri=hijri_label(date.today())
-        if "days" in self.ids:
-            self.ids.days.text="\n".join(
-                d.strftime("%d") if d.month==self.month else f"({d.day})"
-                for d in month_grid(int(self.year),int(self.month))
-            )
-
-    def previous(self):
-        self.month-=1
-        if self.month<1: self.month=12; self.year-=1
-        self.refresh()
-
-    def next(self):
-        self.month+=1
-        if self.month>12: self.month=1; self.year+=1
-        self.refresh()
-
-    def today(self):
-        d=date.today(); self.year=d.year; self.month=d.month
-        self.refresh()
+        if self.children:return
+        root=BoxLayout(orientation="vertical",padding=dp(12),spacing=dp(8));root.add_widget(header("Calendar"))
+        tabs=BoxLayout(size_hint_y=None,height=dp(48),spacing=dp(5))
+        for x in ("Islamic","Gregorian"):
+            tabs.add_widget(Button(text=x,background_normal="",background_color=CARD,color=GOLD))
+        root.add_widget(tabs)
+        root.add_widget(Label(text="August 2026\n\nMon  Tue  Wed  Thu  Fri  Sat  Sun\n 27   28   29   30   31    1    2\n  3    4    5    6    7    8    9\n 10   11   12   13   14   15   16\n 17   18   19   20   21   22   23\n 24   25   26   27   28   29   30\n 31",color=TEXT,font_size=fs(17),halign="center"))
+        root.add_widget(Label(text="Selected date → Hijri conversion • Prayer times • Islamic events • Notes",color=MUTED,font_size=fs(12)))
+        self.add_widget(root)

@@ -1,53 +1,22 @@
-from kivy.properties import StringProperty, ListProperty, BooleanProperty
-from kivy.clock import Clock
 from kivy.uix.screenmanager import Screen
-from app.services.search_service import search_all
-
-class SearchScreen(Screen):
-    query=StringProperty("")
-    section=StringProperty("All")
-    results=ListProperty([])
-    searching=BooleanProperty(False)
-
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.textinput import TextInput
+from kivy.uix.button import Button
+from kivy.uix.label import Label
+from kivy.metrics import dp
+from app.utils.responsive import fs
+from app.screens.base import ScreenBase
+from app.screens.common import header
+from app.theme import GOLD,TEXT,MUTED,CARD
+class SearchScreen(ScreenBase):
     def on_enter(self):
-        if "search_input" in self.ids:
-            self.ids.search_input.focus=False
-
-    def run_search(self):
-        self.query=self.ids.search_input.text.strip()
-        self.searching=True
-        Clock.schedule_once(lambda dt:self._do_search(),0)
-
-    def _do_search(self):
-        try:
-            rows=search_all(self.query)
-            if self.section!="All":
-                rows=[r for r in rows if r.section==self.section]
-            self.results=rows
-            self._render()
-        finally:
-            self.searching=False
-
-    def set_section(self, section):
-        self.section=section
-        self.run_search()
-
-    def clear(self):
-        self.ids.search_input.text=""
-        self.query=""
-        self.results=[]
-        self._render()
-
-    def _render(self):
-        if "result_label" not in self.ids: return
-        if not self.query:
-            self.ids.result_label.text="Search Quran, Hadith or Duas"
-            return
-        if not self.results:
-            self.ids.result_label.text="No results found."
-            return
-        chunks=[]
-        for r in self.results[:100]:
-            ref=f"\\nReference: {r.reference}" if r.reference else ""
-            chunks.append(f"[{r.section}] {r.title}\\n{r.text}\\n{r.subtitle}{ref}")
-        self.ids.result_label.text="\\n\\n".join(chunks)
+        if self.children:return
+        root=BoxLayout(orientation="vertical",padding=dp(14),spacing=dp(8))
+        root.add_widget(header("Universal Search"))
+        root.add_widget(TextInput(hint_text="Search Quran, Hadith, Surah, Para, Book, Rawi...",multiline=False,size_hint_y=None,height=dp(52)))
+        tabs=BoxLayout(size_hint_y=None,height=dp(45),spacing=dp(4))
+        for t in ("Quran","Hadith","Surah","Para","Books"):
+            tabs.add_widget(Button(text=t,background_normal="",background_color=CARD,color=GOLD))
+        root.add_widget(tabs)
+        root.add_widget(Label(text="Search Arabic • Urdu • English • Hadith number • narrator • reference",color=MUTED,font_size=fs(13)))
+        self.add_widget(root)

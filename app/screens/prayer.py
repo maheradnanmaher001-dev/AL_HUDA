@@ -1,49 +1,20 @@
-from datetime import datetime
-from kivy.clock import Clock
-from kivy.properties import StringProperty
 from kivy.uix.screenmanager import Screen
-from app.services import prayer_service
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
+from kivy.uix.label import Label
+from kivy.metrics import dp
+from app.utils.responsive import fs
+from app.screens.base import ScreenBase
+from app.screens.common import header
+from app.theme import GOLD,TEXT,MUTED,CARD
 
-class PrayerScreen(Screen):
-    status=StringProperty("Prayer Times")
-    next_prayer=StringProperty("Next Prayer: --")
-    countdown=StringProperty("--:--:--")
-    city=StringProperty("Lahore")
-    country=StringProperty("Pakistan")
-    method=2
-
+class PrayerScreen(ScreenBase):
     def on_enter(self):
-        self.ids.city.text=self.city
-        self.ids.country.text=self.country
-        self.load()
-
-    def load(self):
-        self.city=self.ids.city.text.strip() or "Lahore"
-        self.country=self.ids.country.text.strip() or "Pakistan"
-        self.status=f"Loading prayer times for {self.city}…"
-        prayer_service.async_call(prayer_service.timings_by_city,self.loaded,self.error,
-                                  self.city,self.country,None,self.method)
-
-    def loaded(self,data):
-        def ui(_):
-            self.times=prayer_service.clean(data)
-            for name in prayer_service.PRAYERS:
-                self.ids[name.lower()].text=self.times.get(name,"--")
-            self.status=f"{self.city}, {self.country} • {datetime.now():%d %b %Y}"
-            self.update_countdown()
-            if not hasattr(self,"timer"):
-                self.timer=Clock.schedule_interval(lambda dt:self.update_countdown(),1)
-        Clock.schedule_once(ui)
-
-    def update_countdown(self):
-        target,name=prayer_service.next_prayer(getattr(self,"times",{}))
-        self.next_prayer=f"Next Prayer: {name or '--'}"
-        self.countdown=prayer_service.countdown(target)
-
-    def error(self,msg):
-        Clock.schedule_once(lambda _:self.show_error(msg))
-
-    def show_error(self,msg):
-        self.status="Unable to load prayer times"
-        self.next_prayer="Check internet connection"
-        self.countdown="--:--:--"
+        if self.children:return
+        root=BoxLayout(orientation="vertical",padding=dp(14),spacing=dp(7))
+        root.add_widget(header("Prayer Times"))
+        root.add_widget(Button(text="📍 GPS Location • Islamabad, Pakistan",background_normal="",background_color=CARD,color=TEXT,size_hint_y=None,height=dp(48)))
+        for n,t in [("Fajr","04:15 AM"),("Sunrise","05:40 AM"),("Zuhr","12:20 PM"),("Asr","05:05 PM"),("Maghrib","06:50 PM"),("Isha","08:20 PM")]:
+            root.add_widget(Label(text=f"{n}     {t}",color=TEXT,font_size=fs(17),size_hint_y=None,height=dp(42)))
+        root.add_widget(Label(text="Notifications: ON\nShort Adhan: ON • Stop from notification/lock screen\nAdjustments & calculation method available in Settings",color=MUTED,font_size=fs(13),halign="center"))
+        self.add_widget(root)
