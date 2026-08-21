@@ -1,0 +1,146 @@
+name: Extract AL-HUDA Step 18 - Complete Quran Hadith Integration
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  step18:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract Step 18 package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP="AL-HUDA_step18_COMPLETE_Quran_Hadith_FINAL.zip"
+          test -f "$ZIP"
+          rm -rf .step18_extract
+          mkdir .step18_extract
+          unzip -oq "$ZIP" -d .step18_extract
+
+          cp .step18_extract/app/services/quran_service.py app/services/quran_service.py
+          cp .step18_extract/app/services/hadith_service.py app/services/hadith_service.py
+          cp .step18_extract/data/STEP18_DATA_SOURCES.md data/STEP18_DATA_SOURCES.md
+          cp .step18_extract/docs/STEP18_COMPLETE.md docs/STEP18_COMPLETE.md
+          cp .step18_extract/tests/test_step18_data_scope.py tests/test_step18_data_scope.py
+          cp .step18_extract/STEP18_MANIFEST.txt STEP18_MANIFEST.txt
+          rm -rf .step18_extract
+
+      - name: Verify local project compatibility
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f main.py
+          test -f app/services/quran_service.py
+          test -f app/services/hadith_service.py
+          python -m py_compile app/services/quran_service.py app/services/hadith_service.py
+          python -m pytest -q tests/test_step18_data_scope.py
+
+      - name: Verify complete Quran catalogue online
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, urllib.request
+
+          def get(url):
+              req=urllib.request.Request(
+                  url, headers={"User-Agent":"AL-HUDA-Step18"}
+              )
+              with urllib.request.urlopen(req, timeout=40) as r:
+                  return json.load(r)
+
+          surahs=get("https://api.alquran.cloud/v1/surah")
+          assert len(surahs["data"]) == 114, len(surahs["data"])
+
+          for edition in ("quran-uthmani","ur.jalandhry","en.sahih"):
+              data=get(f"https://api.alquran.cloud/v1/quran/{edition}")
+              assert data["data"]["numberOfAyahs"] == 6236, edition
+
+          for juz in range(1,31):
+              data=get(f"https://api.alquran.cloud/v1/juz/{juz}/quran-uthmani")
+              assert data["data"]["juz"] == juz, juz
+
+          print("QURAN VERIFIED: 114 Surahs + 30 Juz + 6236 ayahs.")
+          PY
+
+      - name: Verify Hadith catalogue and published language editions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, urllib.request
+
+          def get(url):
+              req=urllib.request.Request(
+                  url, headers={"User-Agent":"AL-HUDA-Step18"}
+              )
+              with urllib.request.urlopen(req, timeout=60) as r:
+                  return json.load(r)
+
+          info=get("https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions.json")
+          wanted=[
+              "bukhari","muslim","abudawud","tirmidhi","nasai","ibnmajah",
+              "malik","ahmad","darimi","riyadussalihin","adab","shamail",
+              "mishkat","bulugh","forty"
+          ]
+
+          editions=[]
+          if isinstance(info, dict):
+              groups=info.values()
+          else:
+              groups=[]
+          for group in groups:
+              if not isinstance(group,dict):
+                  continue
+              for item in group.get("collection",[]):
+                  if isinstance(item,dict):
+                      editions.append(item)
+
+          names={x.get("name") for x in editions}
+
+          for book in wanted:
+              for lang in ("ara","eng","urd"):
+                  name=f"{lang}-{book}"
+                  if name not in names:
+                      raise SystemExit(
+                          f"Published source edition missing: {name}"
+                      )
+
+          print(
+              "HADITH CATALOG VERIFIED: 15 classical collections have "
+              "Arabic/English/Urdu edition endpoints published by the source."
+          )
+          print(
+              "NOTE: existence of an Urdu edition does not prove every "
+              "chapter has an Urdu translation; the app must show source "
+              "availability rather than fabricate missing translations."
+          )
+          PY
+
+      - name: Commit Step 18
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            app/services/quran_service.py \
+            app/services/hadith_service.py \
+            data/STEP18_DATA_SOURCES.md \
+            docs/STEP18_COMPLETE.md \
+            tests/test_step18_data_scope.py \
+            STEP18_MANIFEST.txt
+
+          if git diff --cached --quiet; then
+            echo "No Step 18 changes to commit."
+            exit 0
+          fi
+
+          git commit -m "Complete AL-HUDA Step 18 Quran Hadith integration"
+          git push
