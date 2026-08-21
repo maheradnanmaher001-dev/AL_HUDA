@@ -1,0 +1,3 @@
+AL-HUDA Step 17 — Production Background Azan
+Adds app/services/azan_service.py and Step 17 documentation.
+Workflow preserves existing project files and adds required Android foreground-service/notification configuration only when missing.
