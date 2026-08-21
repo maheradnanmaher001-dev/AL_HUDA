@@ -1,0 +1,110 @@
+name: Step 18 - Download and Verify Local Quran Hadith Data
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  step18:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Locate Step 18 ZIP package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP_FILE="$(find . -maxdepth 1 -type f -name 'AL_HUDA_STEP18_DATA_PACKAGE.zip' -print -quit)"
+          if [ -z "$ZIP_FILE" ]; then
+            echo "::error::AL_HUDA_STEP18_DATA_PACKAGE.zip was not found in the repository root."
+            echo "Upload the Step 18 ZIP to the repository root, then run this workflow again."
+            exit 1
+          fi
+          echo "ZIP_FILE=$ZIP_FILE" >> "$GITHUB_ENV"
+          echo "Found: $ZIP_FILE"
+
+      - name: Extract Step 18 package
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .step18_package
+          mkdir -p .step18_package
+          unzip -q "$ZIP_FILE" -d .step18_package
+
+          test -f .step18_package/tools/download_step18_data.py
+
+          mkdir -p tools data/quran data/hadith
+          cp .step18_package/tools/download_step18_data.py tools/download_step18_data.py
+
+          echo "Step 18 downloader extracted successfully:"
+          ls -lh tools/download_step18_data.py
+
+      - name: Verify downloader syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s tools/download_step18_data.py
+          python -m py_compile tools/download_step18_data.py
+          echo "Downloader syntax check passed."
+
+      - name: Download complete local Quran and Hadith data
+        run: python tools/download_step18_data.py
+
+      - name: Verify generated Step 18 data
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          test -s data/quran/quran_arabic_uthmani.json
+          test -s data/quran/quran_english.json
+          test -s data/quran/quran_urdu.json
+          test -s data/quran/catalogue.json
+          test -s data/hadith/manifest.json
+          test -s data/STEP18_MANIFEST.json
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          q = json.loads(Path("data/quran/catalogue.json").read_text(encoding="utf-8"))
+          h = json.loads(Path("data/hadith/manifest.json").read_text(encoding="utf-8"))
+
+          assert q["surahs"] == 114, q
+          assert q["ayahs"] == 6236, q
+          assert q["juz"] == 30, q
+          assert h["collections"] >= 10, h
+          assert h["editions"] >= 10, h
+
+          print("PASS: Quran 114 Surahs / 6236 Ayahs / 30 Juz")
+          print(f"PASS: Hadith {h['collections']} collections / {h['editions']} editions")
+          print("STEP 18 DATA VERIFICATION PASSED")
+          PY
+
+      - name: Commit Step 18 local data
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add tools/download_step18_data.py data/quran data/hadith data/STEP18_MANIFEST.json
+
+          if git diff --cached --quiet; then
+            echo "No new Step 18 data changes to commit."
+            exit 0
+          fi
+
+          git commit -m "Complete Step 18 Quran Hadith data"
+          git push
