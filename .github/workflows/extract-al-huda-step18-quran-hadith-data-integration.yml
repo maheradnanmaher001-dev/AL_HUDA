@@ -1,0 +1,90 @@
+name: Extract AL-HUDA Step 18 - Quran Hadith Data Integration
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  extract-step18:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract Step 18 package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP="AL-HUDA_step18_Quran_Hadith_Data_Integration_FINAL.zip"
+          test -f "$ZIP"
+
+          rm -rf .step18_extract
+          mkdir .step18_extract
+          unzip -oq "$ZIP" -d .step18_extract
+
+          mkdir -p app/services data tests
+          cp .step18_extract/app/services/content_repository.py app/services/content_repository.py
+          cp .step18_extract/data/STEP18_DATA_REQUIREMENTS.md data/STEP18_DATA_REQUIREMENTS.md
+          cp .step18_extract/tests/test_content_repository.py tests/test_content_repository.py
+          cp .step18_extract/STEP18_MANIFEST.txt STEP18_MANIFEST.txt
+          rm -rf .step18_extract
+
+      - name: Verify integration layer
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f main.py
+          test -f app/services/quran_service.py
+          test -f app/services/hadith_service.py
+          test -f app/services/content_repository.py
+          python -m py_compile app/services/content_repository.py
+
+          # Do not silently claim complete data integration.
+          # The real datasets must exist before Step 18 can be verified.
+          python - <<'PY'
+          from pathlib import Path
+
+          root = Path("data")
+          quran = any((root / p).is_file() for p in [
+              "quran.json", "quran/quran.json", "quran/data.json"
+          ])
+          hadith = any((root / p).is_file() for p in [
+              "hadith.json", "hadith/hadith.json", "hadith/data.json"
+          ])
+
+          if not quran or not hadith:
+              missing = []
+              if not quran: missing.append("Quran dataset")
+              if not hadith: missing.append("Hadith dataset")
+              raise SystemExit(
+                  "STEP 18 NOT COMPLETE: missing " + ", ".join(missing) +
+                  ". Add verified/licensed datasets before final verification."
+              )
+
+          print("Quran and Hadith dataset files found.")
+          PY
+
+      - name: Run Step 18 tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pytest -q tests/test_content_repository.py
+
+      - name: Commit Step 18 integration layer
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/services/content_repository.py data/STEP18_DATA_REQUIREMENTS.md tests/test_content_repository.py STEP18_MANIFEST.txt
+
+          if git diff --cached --quiet; then
+            echo "No Step 18 changes to commit."
+            exit 0
+          fi
+
+          git commit -m "Add Step 18 Quran Hadith integration layer"
+          git push
