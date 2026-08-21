@@ -1,0 +1,67 @@
+name: Step 18 - Download and Verify Quran Hadith Data
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  step18:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Verify Step 18 downloader exists
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f tools/download_step18_data.py
+          python -m py_compile tools/download_step18_data.py
+
+      - name: Download complete local Quran and Hadith data
+        run: python tools/download_step18_data.py
+
+      - name: Verify generated files
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f data/quran/quran_arabic_uthmani.json
+          test -f data/quran/quran_english.json
+          test -f data/quran/quran_urdu.json
+          test -f data/quran/catalogue.json
+          test -f data/hadith/manifest.json
+          test -f data/STEP18_MANIFEST.json
+          python - <<'PY'
+          import json
+          q=json.load(open("data/quran/catalogue.json", encoding="utf-8"))
+          h=json.load(open("data/hadith/manifest.json", encoding="utf-8"))
+          assert (q["surahs"], q["ayahs"], q["juz"]) == (114, 6236, 30)
+          assert h["collections"] >= 10
+          assert h["editions"] >= 10
+          print("Final verification passed.")
+          PY
+
+      - name: Commit Step 18 local data
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/quran data/hadith data/STEP18_MANIFEST.json tools/download_step18_data.py
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit -m "Complete Step 18 Quran and Hadith data"
+          git push
