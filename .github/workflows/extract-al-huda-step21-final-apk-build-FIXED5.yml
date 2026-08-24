@@ -1,0 +1,162 @@
+name: Step 21 - Final APK Build (Fixed 5)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 90
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Locate Step 21 ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP_FILE="$(find . -maxdepth 1 -type f -name 'AL_HUDA_STEP21_FINAL_APK_BUILD_FIXED5.zip' -print -quit)"
+          if [ -z "$ZIP_FILE" ]; then
+            echo "::error::AL_HUDA_STEP21_FINAL_APK_BUILD_FIXED5.zip was not found in repository root."
+            exit 1
+          fi
+          echo "ZIP_FILE=$ZIP_FILE" >> "$GITHUB_ENV"
+
+      - name: Extract Step 21 package
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .step21_package
+          mkdir -p .step21_package
+          unzip -q "$ZIP_FILE" -d .step21_package
+          test -f .step21_package/buildozer.spec
+          test -f .step21_package/main.py
+          test -f .step21_package/al_huda.kv
+          test -f .step21_package/assets/icon.png
+          test -f .step21_package/assets/splash.png
+          test -f .step21_package/tools_step21_preflight.py
+          test -f .step21_package/p4a-recipes/python3/__init__.py
+          cp -Rf .step21_package/app/. app/
+          cp -Rf .step21_package/backend/. backend/
+          cp -Rf .step21_package/assets/. assets/
+          cp -Rf .step21_package/tests/. tests/
+          cp -Rf .step21_package/p4a-recipes ./p4a-recipes
+          cp -f .step21_package/main.py main.py
+          cp -f .step21_package/al_huda.kv al_huda.kv
+          cp -f .step21_package/buildozer.spec buildozer.spec
+          cp -f .step21_package/requirements.txt requirements.txt
+          cp -f .step21_package/README.md README.md
+          cp -f .step21_package/STEP18_MANIFEST.txt STEP18_MANIFEST.txt
+          cp -f .step21_package/STEP20_INTEGRATION_TESTING.md STEP20_INTEGRATION_TESTING.md
+          cp -f .step21_package/tools_step21_preflight.py tools_step21_preflight.py
+
+      - name: Verify required project structure and data integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -d app/screens
+          test -d app/services
+          test -d app/utils
+          test -d data/quran
+          test -d data/hadith
+          test -f app/services/quran_service.py
+          test -f app/services/hadith_service.py
+          test -f app/utils/responsive.py
+          test -f app/screens/settings.py
+          echo 'PASS: AL-HUDA project structure and Quran/Hadith service integration present.'
+
+      - name: Set up Python 3.13 host environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13.12'
+          cache: 'pip'
+
+      - name: Pin pip version (avoid broken pip 26.x self-upgrade)
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "pip<26" > "$GITHUB_WORKSPACE/pip-constraints.txt"
+          echo "PIP_CONSTRAINT=$GITHUB_WORKSPACE/pip-constraints.txt" >> "$GITHUB_ENV"
+          echo "PASS: pip constrained to <26 for the rest of this job."
+
+      - name: Install Buildozer dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y git zip unzip openjdk-17-jdk autoconf automake libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install 'buildozer>=1.5.0' 'cython==0.29.37'
+
+      - name: Verify build configuration before Buildozer
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Eq '^requirements[[:space:]]*=[[:space:]]*python3==3\.13\.12,hostpython3==3\.13\.12,kivy,requests[[:space:]]*$' buildozer.spec
+          grep -Eq '^p4a\.branch[[:space:]]*=[[:space:]]*master[[:space:]]*$' buildozer.spec
+          grep -Eq '^p4a\.local_recipes[[:space:]]*=[[:space:]]*p4a-recipes[[:space:]]*$' buildozer.spec
+          grep -Eq '^android\.api[[:space:]]*=[[:space:]]*35[[:space:]]*$' buildozer.spec
+          grep -Eq '^android\.minapi[[:space:]]*=[[:space:]]*23[[:space:]]*$' buildozer.spec
+          grep -Eq '^title[[:space:]]*=[[:space:]]*AL-HUDA[[:space:]]*$' buildozer.spec
+          grep -Eq '^package\.name[[:space:]]*=[[:space:]]*alhuda[[:space:]]*$' buildozer.spec
+          grep -Eq '^android\.accept_sdk_license[[:space:]]*=[[:space:]]*True[[:space:]]*$' buildozer.spec
+          grep -q 'ac_cv_func_getgrent=no' p4a-recipes/python3/__init__.py
+          echo 'PASS: matched Python/hostpython 3.13.12 + Android-safe local Python recipe.'
+
+      - name: Run Step 21 preflight and tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools_step21_preflight.py
+          python -m compileall -q app backend main.py tests tools_step21_preflight.py p4a-recipes
+          PYTHONPATH=. python tests/test_step18_data_scope.py
+          PYTHONPATH=. python tests/test_step20_integration.py
+
+      - name: Clean stale Buildozer state
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .buildozer bin
+
+      - name: Resolve local recipe path for Buildozer
+        shell: bash
+        run: |
+          set -euo pipefail
+          sed -i "s#^p4a\.local_recipes[[:space:]]*=.*#p4a.local_recipes = $GITHUB_WORKSPACE/p4a-recipes#" buildozer.spec
+          grep -Eq "^p4a\.local_recipes[[:space:]]*=[[:space:]]*$GITHUB_WORKSPACE/p4a-recipes[[:space:]]*$" buildozer.spec
+          echo "PASS: p4a local recipe path = $GITHUB_WORKSPACE/p4a-recipes"
+
+      - name: Build Android debug APK
+        shell: bash
+        env:
+          BUILDOZER_ALLOW_ORG_TEST_DOMAIN: '1'
+        run: |
+          set -euo pipefail
+          buildozer -v android debug
+
+      - name: Verify APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK="$(find bin -maxdepth 1 -type f -name '*.apk' -print -quit)"
+          if [ -z "$APK" ]; then
+            echo '::error::No APK was produced in bin/.'
+            exit 1
+          fi
+          echo "Built APK: $APK"
+          ls -lh "$APK"
+          unzip -t "$APK" >/dev/null
+          echo 'PASS: APK exists and archive integrity is valid.'
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AL-HUDA-Test-APK-Step21
+          path: bin/*.apk
+          if-no-files-found: error
+          retention-days: 14
